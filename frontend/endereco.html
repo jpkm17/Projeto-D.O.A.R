@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Define o conjunto de caracteres para garantir que o conteúdo seja renderizado corretamente -->
+    <meta charset="UTF-8">
+    
+    <!-- Define a viewport para tornar o site responsivo em dispositivos móveis -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Título da página que aparece na aba do navegador -->
+    <title>Confirmar Endereço</title>
+    
+    <!-- Link para o arquivo CSS externo para estilização da página -->
+    <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+    <!-- Container principal onde todo o conteúdo do formulário está envolvido -->
+    <div class="container">
+        <!-- Cabeçalho principal da página -->
+        <h1>Confirmar Endereço de Entrega</h1>
+        
+        <!-- Parágrafo explicando o que o usuário deve fazer -->
+        <p>Por favor, insira o endereço para onde a doação será enviada:</p>
+
+        <!-- Formulário para capturar as informações do endereço do usuário -->
+        <form id="enderecoForm">
+            
+            <!-- Campo para o nome do usuário -->
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <!-- Campo para o e-mail do usuário -->
+            <label for="email">E-mail:</label>
+            <input type="text" id="email" name="email" required>
+
+            <!-- Campo para selecionar o ponto de coleta -->
+            <label for="PontoColeta">Instituição:</label>
+            <select id="PontoColeta" name="PontoColeta" required>
+                <!-- Opções de pontos de coleta -->
+                <option value="">----- Escolha uma instituição -----</option>
+                <option value="1">Instituição 1</option>
+                <option value="2">Instituição 2</option>
+                <option value="3">Instituição 3</option>
+
+                <!-- Comentário explicando o que acontece após a seleção -->
+                <!-- Quando o usuário seleciona uma das opções, é enviado um e-mail de confirmação, avisando sobre o local e o endereço correto para a doação -->
+            </select>
+            
+            <!-- Campo para o nome da cidade do usuário -->
+            <label for="cidade">Cidade:</label>
+            <input type="text" id="cidade" name="cidade" required>
+           
+            <!-- Botões para confirmar ou cancelar a doação -->
+            <div class="botoes">
+                <br>
+                <!-- Botão de envio do formulário -->
+                <button type="submit">Confirmar Doação</button>
+
+                <!-- Botão para cancelar a doação -->
+                <button type="button" onclick="cancelarDoacao()" class="cancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Script JavaScript para interatividade e funcionalidades da página -->
+    <script>
+        // Adiciona um ouvinte de evento para quando o formulário for submetido
+        document.getElementById('enderecoForm').addEventListener('submit', function(event) {
+            // Impede o envio do formulário para que o JavaScript possa tratar a ação
+            event.preventDefault();
+
+            // Exibe uma mensagem de confirmação
+            alert('Doação confirmada! Um e-mail foi enviado confirmando o local, obrigado por sua generosidade!');
+
+            // Redireciona o usuário para a página inicial após a confirmação
+            window.location.href = 'index.html';
+        });
+
+        // Função para cancelar a doação
+        function cancelarDoacao() {
+            // Exibe uma caixa de diálogo de confirmação
+            if (confirm('Tem certeza que deseja cancelar a doação?')) {
+                // Se o usuário confirmar, redireciona para a página inicial
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+<script src="endereco.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprovação de Pagamento - Doe Alimentos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            });
+    </script>
+</body>
+<body>
+    <div class="container">
+        <h1>Comprove seu Pagamento</h1>
+        <p>Obrigado por sua generosidade! Por favor, preencha seus dados para confirmar o pagamento da sua doação.</p>
+
+        <!-- Formulário para capturar as informações de pagamento do usuário -->
+        <form id="pagamentoForm">
+            <div class="input-group">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="input-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="valor">Valor da Doação (R$):</label>
+                <input type="text" id="valor" name="valor" required readonly>
+            </div>
+
+            <div class="input-group">
+                <label for="metodo">Método de Pagamento:</label>
+                <select id="metodo" name="metodo" required>
+                    <option value="cartao">Cartão de Crédito</option>
+                    <option value="boleto">Boleto Bancário</option>
+                    <option value="pix">Pix</option>
+                    <option value="transferencia">Transferência Bancária</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="codigo">Código de Transação:</label>
+                <input type="text" id="codigo" name="codigo">
+            </div>
+
+            <button type="submit">Confirmar Pagamento</button>
+
+             <!-- Botão de Voltar -->
+             <button type="button" onclick="voltarParaIndex()">Voltar para a Página Inicial</button>
+            
+            <!-- Botão para cancelar a doação -->
+            <button type="button" onclick="cancelarPagamento()" class="cancelar">Cancelar</button>
+        </form>
+    </div>
+
+    <!-- Script JavaScript para interatividade e funcionalidades da página -->
+    <script>
+        // Adiciona um ouvinte de evento para quando o formulário for submetido
+        document.getElementById('pagamentoForm').addEventListener('submit', function(event) {
+            // Impede o envio do formulário para que o JavaScript possa tratar a ação
+            event.preventDefault();
+
+            // Exibe uma mensagem de confirmação
+            alert('Pagamento confirmado! Um e-mail foi enviado confirmando, obrigado por sua generosidade!');
+
+            // Redireciona o usuário para a página de confirmação após a confirmação
+            window.location.href = 'confirmacao.html'; // Ou qualquer página que você queira redirecionar
+        });
+
+        // Função para cancelar a doação
+        function cancelarPagamento() {
+            // Exibe uma caixa de diálogo de confirmação
+            if (confirm('Tem certeza que deseja cancelar a doação?')) {
+                // Se o usuário confirmar, redireciona para a página inicial
+                window.location.href = 'index.html'; // Substitua pelo link da página inicial desejada
+            }
+        }
+
+        // Recupera o valor da doação armazenado no localStorage
+        const valorDoacao = localStorage.getItem('totalDoacao');
+        
+        // Preenche o campo de valor automaticamente com o valor da doação
+        if (valorDoacao) {
+            document.getElementById('valor').value = valorDoacao;
+        }
+
+        
+    </script>
+</body>
+</html>

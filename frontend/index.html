@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doe Alimentos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            });
+    </script>
+</body>
+<body>
+    <div class="container">
+        <h1>Doe Alimentos, Monte sua Sacola com carinho</h1>
+        <p>Leve esperança e amor para quem mais precisa</p>
+
+        <h2>O Projeto</h2>
+        <p>O que é o Doe Alimentos</p>
+        <p>O Doe Alimentos foi criado pela Rede de Bancos de Alimentos do Rio Grande do Sul, reconhecida instituição que há 20 anos ajuda a minimizar a fome no Estado. Esta é uma nova maneira da população levar alimento, carinho e esperança para quem mais precisa. De forma prática e rápida, é montada e doada pelo internauta uma cesta de alimentos, a qual beneficiará instituições de 34 cidades gaúchas.</p>
+
+        <h2>Escolha os produtos que deseja doar</h2>
+
+        <div class="conteudo-dividido">
+            <!-- Metade esquerda: Lista de produtos -->
+            <div class="lista-produtos">
+                <div class="product-list" id="product-list">
+                    <!-- Produtos serão inseridos aqui pelo JavaScript -->
+                </div>
+            </div>
+
+            <!-- Metade direita: Resumo da compra -->
+            <div class="resumo-compra">
+                <h3>Itens Selecionados</h3>
+                <ul id="itens-selecionados">
+                    <!-- Itens adicionados serão exibidos aqui -->
+                </ul>
+                <div class="total">
+                    <p>Total da Sacola: R$ <span id="total">0,00</span></p>
+                </div>
+                <button onclick="finalizarCompra()">Encerrar Compra</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
