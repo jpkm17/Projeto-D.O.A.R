@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Usuario } from './entidades/usuario.entity';
+import { Usuario } from './usuario.entity';
 
 @Entity('INSTITUICAO') // Especifica o nome da tabela no banco
 export class Instituicao {

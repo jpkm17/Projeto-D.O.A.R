@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, BeforeInsert } from 'typeorm';
-import { Doacao } from './doacao.entity';
+import { Doacao } from '../entidades/doacao.entity';
 import { hashSync } from 'bcrypt';
-import { Instituicao } from './instituicao.entity';
+import { Instituicao } from '../entidades/instituicao.entity';
 
 export enum UserRole {
   ADMIN = "admin",
