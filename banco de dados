@@ -1,0 +1,48 @@
+CREATE DATABASE IF NOT EXISTS sistema_doacoes;
+USE sistema_doacoes;
+
+-- Tabela USUARIO
+CREATE TABLE USUARIO (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    telefone VARCHAR(15) NOT NULL,
+    telefone_secundario VARCHAR(15) NULL,
+    email VARCHAR(60) NOT NULL UNIQUE,
+    senha VARCHAR(40) NOT NULL,
+    tipo_conta ENUM('admin', 'comum') DEFAULT 'comum'
+);
+
+-- Tabela ENDERECO
+CREATE TABLE ENDERECO (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cep VARCHAR(8) NULL,
+    rua VARCHAR(50) NOT NULL,
+    bairro VARCHAR(50) NOT NULL,
+    numero INT NOT NULL,
+    cidade VARCHAR(50) NOT NULL,
+    estado VARCHAR(30) NOT NULL
+);
+
+-- Tabela INSTITUICAO
+CREATE TABLE INSTITUICAO (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    data_fundacao DATE NULL,
+    telefone VARCHAR(15) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    descricao TEXT NOT NULL
+);
+
+-- Tabela DOACAO
+CREATE TABLE DOACAO (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    itens JSON NOT NULL,
+    valor FLOAT DEFAULT 0,
+    usuario_id INT NOT NULL,
+    instituicao_id INT NOT NULL,
+    endereco_id INT NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES USUARIO(id) ON DELETE CASCADE,
+    FOREIGN KEY (instituicao_id) REFERENCES INSTITUICAO(id) ON DELETE CASCADE,
+    FOREIGN KEY (endereco_id) REFERENCES ENDERECO(id) ON DELETE CASCADE
+);
