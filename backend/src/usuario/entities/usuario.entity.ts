@@ -1,7 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, BeforeInsert } from 'typeorm';
-import { Doacao } from '../entidades/doacao.entity';
 import { hashSync } from 'bcrypt';
-import { Instituicao } from '../entidades/instituicao.entity';
 
 export enum UserRole {
   ADMIN = "admin",
@@ -32,8 +30,6 @@ export class Usuario {
   @Column({ length: 40, nullable: true })
   senha: string;
 
-  @OneToMany(() => Doacao, (doacao) => doacao.usuario)
-  doacao: Doacao[];
 
   @Column({
     type: "enum",
@@ -41,9 +37,7 @@ export class Usuario {
     default: UserRole.COMUM,
   })
   tipoConta: UserRole;
-
-  @OneToMany(()=> Instituicao, (inst)=> inst.usuario)
-  instituicao: Instituicao;
+  
 
   @BeforeInsert()
   hashPassword() {
