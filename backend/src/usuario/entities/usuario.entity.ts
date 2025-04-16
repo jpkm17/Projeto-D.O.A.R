@@ -1,47 +1,43 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, BeforeInsert } from 'typeorm';
-import { hashSync } from 'bcrypt';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from "typeorm";
+// import { Instituicao } from "./Instituicao";
+// import { Doacao } from "./Doacao";
+// import { UsuarioInstituicao } from "./UsuarioInstituicao";
 
-export enum UserRole {
-  ADMIN = "admin",
-  COMUM = "comum",
-  AFILIADO = "afiliado"
-}
-
-@Entity('USUARIO') 
+@Entity('usuario')
 export class Usuario {
   @PrimaryGeneratedColumn()
-  id: number;
+  id_usuario: number;
 
   @Column({ length: 100 })
   nome: string;
 
-  @Column({ type: 'date' })
-  dataNascimento: Date;
-
-  @Column({ length: 15 })
-  telefone: string;
-
-  @Column({ length: 15, nullable: true })
-  telefone2: string;
-
-  @Column({ length: 60, })
+  @Column({ length: 100, unique: true })
   email: string;
 
-  @Column({ length: 40, nullable: true })
+  @Column({ length: 100 })
   senha: string;
 
+  @Column({ length: 14, unique: true })
+  cpf: string;
 
-  @Column({
-    type: "enum",
-    enum: UserRole,
-    default: UserRole.COMUM,
+  @Column({ length: 20, nullable: true })
+  telefone: string;
+
+  @Column({ 
+    type: "enum", 
+    enum: ["doador", "receptor", "administrador"] 
   })
-  tipoConta: UserRole;
-  
+  tipo: string;
 
-  @BeforeInsert()
-  hashPassword() {
-    this.senha = hashSync(this.senha, 10);
-  }
+  @CreateDateColumn({ type: 'timestamp' }) //quando registrar no banco retorna a data do cadastro
+  creationDate: Date; // Tornado opcional
 
+  // @OneToMany(() => Instituicao, (instituicao) => instituicao.responsavel)
+  // instituicoes: Instituicao[];
+
+  // @OneToMany(() => Doacao, (doacao) => doacao.doador)
+  // doacoes: Doacao[];
+
+  // @OneToMany(() => UsuarioInstituicao, (vinculo) => vinculo.usuario)
+  // vinculos: UsuarioInstituicao[];
 }
