@@ -4,7 +4,8 @@ import { Doacao } from "../../doacao/entities/doacao.entity";
 import { hashSync } from 'bcrypt';
 import { Endereco } from "src/endereco/entities/endereco.entity";
 
-enum UserRole {
+// Corrigido: Adicionado export
+export enum UserRole {
   ADMIN_SISTEMA = "admin_sistema",
   ADMIN_INST = "admin_instituicao",
   DOADOR = "doador", //usuario comum
@@ -38,7 +39,7 @@ export class Usuario {
   })
   tipo: UserRole;
 
-  @CreateDateColumn({ type: 'timestamp' }) //quando for registrar no banco,ele salva a data do cadastro
+  @CreateDateColumn({ type: 'timestamp' })
   creationDate: Date;
 
   @OneToMany(() => Instituicao, instituicao => instituicao.administrador)
