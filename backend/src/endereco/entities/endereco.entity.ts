@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Instituicao } from "src/instituicao/entities/instituicao.entity";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
 
 @Entity('endereco')
 export class Endereco {
@@ -11,10 +12,10 @@ export class Endereco {
     @Column({ length: 100 })
     logradouro: string;
 
-    @Column({ length: 10, nullable: true })
+    @Column({ length: 10})
     numero: string;
 
-    @Column({ length: 50, nullable: true })
+    @Column({ length: 50})
     complemento: string;
 
     @Column({ length: 50 })

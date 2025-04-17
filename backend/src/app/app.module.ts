@@ -19,7 +19,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.ts,.js}'],
       synchronize: true,
-      // dropSchema: true,
+      dropSchema: true,
     } as TypeOrmModuleOptions)],
   controllers: [AppController],
   providers: [AppService],

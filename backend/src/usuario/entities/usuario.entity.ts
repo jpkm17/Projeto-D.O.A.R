@@ -1,7 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from "typeorm";
-// import { Instituicao } from "./Instituicao";
-// import { Doacao } from "./Doacao";
-// import { UsuarioInstituicao } from "./UsuarioInstituicao";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, BeforeInsert, JoinColumn, OneToOne } from "typeorm";
+import { Instituicao } from "../../instituicao/entities/instituicao.entity";
+import { Doacao } from "../../doacao/entities/doacao.entity";
+import { hashSync } from 'bcrypt';
+import { Endereco } from "src/endereco/entities/endereco.entity";
+
+enum UserRole {
+  ADMIN_SISTEMA = "admin_sistema",
+  ADMIN_INST = "admin_instituicao",
+  DOADOR = "doador", //usuario comum
+  RECEPTOR = "receptor" //Membro instituicao
+}
 
 @Entity('usuario')
 export class Usuario {
@@ -23,21 +31,28 @@ export class Usuario {
   @Column({ length: 20, nullable: true })
   telefone: string;
 
-  @Column({ 
-    type: "enum", 
-    enum: ["doador", "receptor", "administrador"] 
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.DOADOR, // por padrão esse usuario é doador
   })
-  tipo: string;
+  tipo: UserRole;
 
-  @CreateDateColumn({ type: 'timestamp' }) //quando registrar no banco retorna a data do cadastro
-  creationDate: Date; // Tornado opcional
+  @CreateDateColumn({ type: 'timestamp' }) //quando for registrar no banco,ele salva a data do cadastro
+  creationDate: Date;
 
-  // @OneToMany(() => Instituicao, (instituicao) => instituicao.responsavel)
-  // instituicoes: Instituicao[];
+  @OneToMany(() => Instituicao, instituicao => instituicao.administrador)
+  instituicoesAdministradas: Instituicao[];
 
-  // @OneToMany(() => Doacao, (doacao) => doacao.doador)
-  // doacoes: Doacao[];
+  @OneToMany(() => Doacao, doacao => doacao.doador)
+  doacoes: Doacao[];
 
-  // @OneToMany(() => UsuarioInstituicao, (vinculo) => vinculo.usuario)
-  // vinculos: UsuarioInstituicao[];
+  @OneToOne(() => Endereco)
+  @JoinColumn({ name: 'endereco_id' })
+  endereco: Endereco;
+
+  @BeforeInsert()
+  hashPassword() {
+    this.senha = hashSync(this.senha, 10);
+  }
 }
