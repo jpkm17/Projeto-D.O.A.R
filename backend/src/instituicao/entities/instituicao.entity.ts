@@ -1,19 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, OneToOne, CreateDateColumn } from "typeorm";
 import { Usuario } from "../../usuario/entities/usuario.entity";
+import { Endereco } from "src/endereco/entities/endereco.entity";
+import { Doacao } from "src/doacao/entities/doacao.entity";
+import { Necessidade } from "./necessidade.entity";
 
-
-@Entity()
+@Entity('instituicao')
 export class Instituicao {
     @PrimaryGeneratedColumn()
     id_instituicao: number;
-
-    // @ManyToOne(() => Usuario, (usuario) => usuario.instituicoes)
-    // @JoinColumn({ name: "id_usuario_responsavel" })
-    // responsavel: Usuario;
-
-    // @OneToOne(() => Endereco, { cascade: true })
-    // @JoinColumn({ name: "id_endereco" })
-    // endereco: Endereco;
 
     @Column({ length: 100 })
     nome_fantasia: string;
@@ -21,7 +15,7 @@ export class Instituicao {
     @Column({ length: 100, nullable: true })
     razao_social: string;
 
-    @Column({ length: 18, unique: true, nullable: true })
+    @Column({ length: 18, unique: true })
     cnpj: string;
 
     @Column({ type: "text", nullable: true })
@@ -36,24 +30,22 @@ export class Instituicao {
     @Column({ length: 100, nullable: true })
     horario_funcionamento: string;
 
-    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    data_cadastro: Date;
+    @CreateDateColumn({ type: 'timestamp' }) //quando for registrar no banco,ele salva a data do cadastro
+    creationDate: Date;
 
     @Column({ default: true })
     ativo: boolean;
 
-    @Column({ type: "timestamp", nullable: true })
-    data_aprovacao: Date;
+    @ManyToOne(() => Usuario, usuario => usuario.instituicoesAdministradas)
+    administrador: Usuario;
 
-    @Column({ default: false })
-    aprovado: boolean;
+    @OneToOne(() => Endereco)
+    @JoinColumn({name: 'endereco_id'})
+    endereco: Endereco;
 
-    // @OneToMany(() => Doacao, (doacao) => doacao.instituicao)
-    // doacoes: Doacao[];
+    @OneToMany(() => Necessidade, necessidade => necessidade.instituicao)
+    necessidades: Necessidade[];
 
-    // @OneToMany(() => NecessidadeInstituicao, (necessidade) => necessidade.instituicao)
-    // necessidades: NecessidadeInstituicao[];
-
-    // @OneToMany(() => UsuarioInstituicao, (vinculo) => vinculo.instituicao)
-    // vinculos: UsuarioInstituicao[];
+    @OneToMany(() => Doacao, doacao => doacao.instituicao)
+    doacoesRecebidas: Doacao[];
 }

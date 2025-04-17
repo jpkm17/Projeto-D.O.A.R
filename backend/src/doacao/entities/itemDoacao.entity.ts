@@ -1,26 +1,24 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Item } from "./item.entity";
+import { Doacao } from "./doacao.entity";
 
 @Entity()
 export class ItemDoacao {
-    @PrimaryGeneratedColumn()
-    id_item: number;
-
-    // @ManyToOne(() => Doacao, (doacao) => doacao.itens, { onDelete: "CASCADE" })
-    // @JoinColumn({ name: "id_doacao" })
-    // doacao: Doacao;
-
-    @Column({ length: 50 })
-    tipo_alimento: string;
-
-    @Column({ type: "decimal", precision: 10, scale: 2 })
-    quantidade: number;
-
-    @Column({ length: 20 })
-    unidade_medida: string;
-
-    @Column({ type: "date", nullable: true })
-    validade: Date;
-
-    @Column({ default: true })
-    perecivel: boolean;
+  @PrimaryGeneratedColumn()
+  id: number;
+  
+  @Column()
+  quantidade: number;
+  
+  @Column("decimal", { precision: 10, scale: 2 })
+  valorUnitario: number;
+  
+  @Column({ default: false })
+  ehDoacaoMonetaria: boolean;
+  
+  @ManyToOne(() => Doacao, doacao => doacao.itensDoacao)
+  doacao: Doacao;
+  
+  @ManyToOne(() => Item, item => item.itensDoacoes)
+  item: Item;
 }
