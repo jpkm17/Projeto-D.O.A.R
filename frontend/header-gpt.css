@@ -1,0 +1,80 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header principal */
+header {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Container do cabeçalho */
+.cabecalho {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo */
+.logo img {
+    max-height: 50px;
+    height: auto;
+}
+
+/* Menu de navegação */
+.menu nav {
+    display: flex;
+    gap: 30px;
+}
+
+.menu nav a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s, border-bottom 0.3s;
+    padding-bottom: 4px;
+}
+
+.menu nav a:hover {
+    color: #3498db;
+    border-bottom: 2px solid #3498db;
+}
+
+/* Espaço reservado para ícones sociais, se for usar futuramente */
+.sociais {
+    display: flex;
+    gap: 10px;
+}
+
+/* Responsivo para mobile */
+@media (max-width: 768px) {
+    .cabecalho {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .menu nav {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .menu nav a {
+        padding: 10px 0;
+    }
+}

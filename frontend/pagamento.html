@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comprovação de Pagamento - Doe Alimentos</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pagamento-gpt.css">
 </head>
 <body>
     <div id="header"></div>
@@ -16,8 +16,7 @@
                 document.getElementById('header').innerHTML = data;
             });
     </script>
-</body>
-<body>
+
     <div class="container">
         <h1>Comprove seu Pagamento</h1>
         <p>Obrigado por sua generosidade! Por favor, preencha seus dados para confirmar o pagamento da sua doação.</p>
@@ -57,10 +56,10 @@
             <button type="submit">Confirmar Pagamento</button>
 
              <!-- Botão de Voltar -->
-             <button type="button" onclick="voltarParaIndex()">Voltar para a Página Inicial</button>
+             <!--button type="button" onclick="voltarParaIndex()">Voltar para a Página Inicial</button-->
             
             <!-- Botão para cancelar a doação -->
-            <button type="button" onclick="cancelarPagamento()" class="cancelar">Cancelar</button>
+            <button type="button" onclick="voltarParaIndex()" class="cancelar">Cancelar</button>
         </form>
     </div>
     <script src="pagamento.js"></script>

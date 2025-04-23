@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
-    <link rel="stylesheet" href="styles.css">
-    
+    <link rel="stylesheet" href="cadastro-gpt.css">
 </head>
 <body>
     <div id="header"></div>
@@ -17,80 +16,59 @@
                 document.getElementById('header').innerHTML = data;
             });
     </script>
-</body>
-<body>
-<div class="container">
-    <h2>Cadastro</h2>
 
-    <form action="#" method="POST">
-        <h3>Informações Pessoais</h3>
-        <label for="nome">Nome Completo:</label>
-        <input type="text" id="nome" name="nome" required>
+    <div class="container">
+        <h2>Cadastro</h2>
 
-        <label for="data_nascimento">Data de Nascimento:</label>
-        <input type="date" id="data_nascimento" name="data_nascimento" required>
+        <form action="#" method="POST">
+            <h3>Informações Pessoais</h3>
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" required>
 
+            <label for="data_nascimento">Data de Nascimento:</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" required>
 
-        <br><br><br><br>
+            <br>
 
-        <h3>Contato</h3>
-    
-    <br>
-        <label for="telefone1">Telefone 1:</label>
-        <input type="text" id="telefone1" name="telefone1" pattern="\d*" title="Apenas números" required>
-    <br>
-    <br>
-        <label for="telefone2">Telefone 2 (Opcional):</label>
-        <input type="text" id="telefone2" name="telefone2" pattern="\d*" title="Apenas números">
-    <br>
-    <br>
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" required>
-    <br>
-    <br>
-        <label for="confirmar_email">Confirmar E-mail:</label>
-        <input type="email" id="confirmar_email" name="confirmar_email" required>
-    <br>
-    <br>
-    <br>
-        <label for="estado">Estado (UF):</label>
-        <select id="estado" name="estado" required>
-            <option value="">----- Escolha um Estado -----</option>
-            <option value="SP">São Paulo</option>
-        
-        </select>
+            <h3>Contato</h3>
+            <br>
+            <label for="telefone">Telefone:</label>
+            <input type="text" id="telefone" name="telefone" pattern="\d*" title="Apenas números" required>
+            <br>
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
 
+            <!--
+            <label for="estado">Estado (UF):</label>
+            <select id="estado" name="estado" required>
+                <option value="">----- Escolha um Estado -----</option>
+                <option value="SP">São Paulo</option>
+            </select>
 
-        <label for="cidade">Cidade:</label>
-        <select id="cidade" name="cidade" required>
+            <label for="cidade">Cidade:</label>
+            <select id="cidade" name="cidade" required>
+                <option value="">---</option>
+            </select>
+            -->
 
+            <br>
 
-            <option value="">---</option>
-        </select>
+            <h3>Informações de Login</h3>
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
 
+            <label for="confirmar_senha">Confirmar Senha:</label>
+            <input type="password" id="confirmar_senha" name="confirmar_senha" required>
 
-    <br><br><br><br>
+            <button type="submit" class="button">Enviar Cadastro</button>
+            <br>
+        </form>
+    </div>
 
-        <h3>Informações de Login</h3>
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required>
+    <button onclick="botaoVoltar()" class="back">« Voltar</button>
+    <br><br><br><br><br><br><br><br>
 
-        <label for="confirmar_senha">Confirmar Senha:</label>
-        <input type="password" id="confirmar_senha" name="confirmar_senha" required>
-
-        <button type="submit" class="button">Enviar Cadastro</button>
-
-
-        <br><br><br><br><br>
-    </form>
-</div>
-
-<!--button href="index.html" class="back">« voltar</button-->
-<button onclick = "botaoVoltar()" class = "back">« Voltar</button>
-<br><br><br><br><br><br><br><br>
-
-
-<script src="cadastro.js"></script>
-
+    <script src="cadastro-gpt.js"></script>
 </body>
 </html>
