@@ -11,6 +11,7 @@ export class CreateUsuarioDto {
   @IsEmail({}, { message: 'Email inválido' })
   @Length(11, 100, { message: 'email deve ter no maximo 50 caracteres' })
   email: string;
+  
   @IsNotEmpty()
   @IsString({ message: 'A senha deve ser uma string' })
   @Length(6, 100, { message: 'A senha deve ter entre 6 e 100 caracteres' })

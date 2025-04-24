@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -8,28 +8,28 @@ import { Usuario } from './entities/usuario.entity';
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
-  @Post('create')
+  @Post('register')
   create(@Body() createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
     return this.usuarioService.create(createUsuarioDto);
   }
 
-  @Get()
+  @Get('all')
   findAll() {
    return this.usuarioService.findAll()
   }
 
-  @Get(':id')
+  @Get('getOne/:id')
   findOne(@Param('id') id: string) {
-    // return this.usuarioService.findOne(+id);
+    return this.usuarioService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put('update/:id')
   update(@Param('id') id: string, @Body() updateUsuarioDto: UpdateUsuarioDto) {
-    // return this.usuarioService.update(+id, updateUsuarioDto);
+    return this.usuarioService.update(+id, updateUsuarioDto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   remove(@Param('id') id: string) {
-    // return this.usuarioService.remove(+id);
+    return this.usuarioService.remove(+id);
   }
 }
