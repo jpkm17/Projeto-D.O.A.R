@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColum
 import { Usuario } from "../../usuario/entities/usuario.entity";
 import { Endereco } from "src/endereco/entities/endereco.entity";
 import { Doacao } from "src/doacao/entities/doacao.entity";
-import { Necessidade } from "./necessidade.entity";
+import { Campanha } from "./campanha.entity";
 
 @Entity('instituicao')
 export class Instituicao {
@@ -40,12 +40,12 @@ export class Instituicao {
     administrador: Usuario;
 
     @OneToOne(() => Endereco)
-    @JoinColumn({name: 'endereco_id'})
+    @JoinColumn({ name: 'endereco_id' })
     endereco: Endereco;
-
-    @OneToMany(() => Necessidade, necessidade => necessidade.instituicao)
-    necessidades: Necessidade[];
 
     @OneToMany(() => Doacao, doacao => doacao.instituicao)
     doacoesRecebidas: Doacao[];
+
+    @OneToMany(() => Campanha, campanha => campanha.instituicao)
+    campanhas: Campanha[];
 }

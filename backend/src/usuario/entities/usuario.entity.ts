@@ -4,7 +4,7 @@ import { Doacao } from "../../doacao/entities/doacao.entity";
 import { hashSync } from 'bcrypt';
 import { Endereco } from "src/endereco/entities/endereco.entity";
 
-enum UserRole {
+export enum UserRole {
   ADMIN_SISTEMA = "admin_sistema",
   ADMIN_INST = "admin_instituicao",
   DOADOR = "doador", //usuario comum
