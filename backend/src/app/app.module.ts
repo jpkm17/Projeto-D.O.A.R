@@ -19,7 +19,7 @@ import { UsuarioModule } from 'src/usuario/usuario.module';
       database: process.env.TYPEORM_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.ts,.js}'],
-      // synchronize: true,
+      synchronize: true,
       // dropSchema: true,
     } as TypeOrmModuleOptions),
     UsuarioModule,
