@@ -1,8 +1,8 @@
+// item.entity.ts (modificado)
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import { Categoria } from "./categoria.entity";
-import { Necessidade } from "src/instituicao/entities/necessidade.entity";
 import { ItemDoacao } from "./itemDoacao.entity";
-
+import { NecessidadeCampanha } from "../../instituicao/entities/necessidadeCampanha.entity";
 
 @Entity()
 export class Item {
@@ -24,12 +24,15 @@ export class Item {
   @Column({ default: true })
   ativo: boolean;
   
+  @Column({ nullable: true })
+  imagemUrl: string;
+  
   @ManyToOne(() => Categoria, categoria => categoria.itens)
   categoria: Categoria;
-  
-  @OneToMany(() => Necessidade, necessidade => necessidade.item)
-  necessidades: Necessidade[];
-  
+
   @OneToMany(() => ItemDoacao, itemDoacao => itemDoacao.item)
   itensDoacoes: ItemDoacao[];
+  
+  @OneToMany(() => NecessidadeCampanha, necessidadeCampanha => necessidadeCampanha.item)
+  necessidadesCampanhas: NecessidadeCampanha[];
 }
