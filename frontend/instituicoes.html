@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Instituições Parceiras</title>
+    <link rel="stylesheet" href="css/instituicoes.css">
+</head>
+<body>
+    <div id="header"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            });
+    </script>
+</body>
+<body>
+    <div class="container">
+        <h1>Escolha uma Instituição para Doar</h1>
+
+        <div class="instituicao-lista">
+            <div class="instituicao" onclick="redirecionarParaDoacao('Esperança Viva')">
+                <h3>Instituto Esperança Viva</h3>
+                <p>Ajuda comunidades carentes com cestas básicas e apoio educacional.</p>
+            </div>
+            <div class="instituicao" onclick="redirecionarParaDoacao('Sementes do Amanhã')">
+                <h3>Projeto Sementes do Amanhã</h3>
+                <p>Educação ambiental e sustentabilidade para jovens.</p>
+            </div>
+            <div class="instituicao" onclick="redirecionarParaDoacao('Mãos que Ajudam')">
+                <h3>Mãos que Ajudam</h3>
+                <p>Apoio a pessoas em situação de rua e reintegração social.</p>
+            </div>
+            <div class="instituicao" onclick="redirecionarParaDoacao('Coração Animal')">
+                <h3>ONG Coração Animal</h3>
+                <p>Proteção e cuidado de animais abandonados.</p>
+            </div>
+            <div class="instituicao" onclick="redirecionarParaDoacao('Luz da Infância')">
+                <h3>Fundação Luz da Infância</h3>
+                <p>Apoio a crianças vítimas de violência ou abandono.</p>
+            </div>
+            <div class="instituicao" onclick="redirecionarParaDoacao('Saúde em Movimento')">
+                <h3>Saúde em Movimento</h3>
+                <p>Atendimento médico gratuito em regiões de difícil acesso.</p>
+            </div>
+        </div>
+
+        <button class="back" onclick="voltar()">« Voltar</button>
+    </div>
+
+    <script>
+        function redirecionarParaDoacao(nomeInstituicao) {
+            // Redireciona para a página de doação com a instituição no parâmetro da URL
+            window.location.href = `campanhas.html?instituicao=${encodeURIComponent(nomeInstituicao)}`;
+        }
+
+        function voltar() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
