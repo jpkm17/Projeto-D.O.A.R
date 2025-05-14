@@ -1,34 +1,65 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { DoacaoService } from './doacao.service';
 import { CreateDoacaoDto } from './dto/create-doacao.dto';
 import { UpdateDoacaoDto } from './dto/update-doacao.dto';
+import { CreateItemDto } from './dto/create-item.dto';
 
 @Controller('doacao')
 export class DoacaoController {
-  constructor(private readonly doacaoService: DoacaoService) {}
+  constructor(private readonly doacaoService: DoacaoService) { }
 
   @Post()
-  create(@Body() createDoacaoDto: CreateDoacaoDto) {
-    return this.doacaoService.create(createDoacaoDto);
+  createDoacao(@Body() createDoacaoDto: CreateDoacaoDto) {
+    return this.doacaoService.createDoacao(createDoacaoDto);
   }
 
   @Get()
-  findAll() {
-    return this.doacaoService.findAll();
+  findAllDoacao() {
+    return this.doacaoService.findAllDoacoes();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.doacaoService.findOne(+id);
+  findOneDoacao(@Param('id') id: string) {
+    return this.doacaoService.findOneDoacao(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDoacaoDto: UpdateDoacaoDto) {
-    return this.doacaoService.update(+id, updateDoacaoDto);
+  @Put(':id')
+  updateDoacao(@Param('id') id: string, @Body() updateDoacaoDto: UpdateDoacaoDto) {
+    return this.doacaoService.updateDoacao(+id, updateDoacaoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.doacaoService.remove(+id);
+  removeDoaca(@Param('id') id: string) {
+    return this.doacaoService.removeDoacao(+id);
   }
+
+
+
+  /* ITEMS */
+
+  @Post('createItem')
+  createItem(@Body() createItemDto: CreateItemDto) {
+    return this.doacaoService.createItem(createItemDto);
+  }
+
+  @Get('items')
+  findAllItems() {
+    return this.doacaoService.findAllItems();
+  }
+
+  @Get('item/:id')
+  findOneItem(@Param('id') id: string) {
+    return this.doacaoService.findOneItem(+id);
+  }
+
+  @Put('updateItem/:id')
+  updateItem(@Param('id') id: string, @Body() updateDoacaoDto: UpdateDoacaoDto) {
+    return this.doacaoService.updateItem(+id, updateDoacaoDto);
+  }
+
+  @Delete('removeItem/:id')
+  removeItem(@Param('id') id: string) {
+    return this.doacaoService.removeItem(+id);
+  }
+
 }
