@@ -52,10 +52,15 @@ function adicionarAoCarrinho(nome, price) {
 
 function removerDoCarrinho(nome, price) {
     const itemExistente = itensSelecionados.find(item => item.nome === nome);
+    
     if (itemExistente) {
-        itensSelecionados = itensSelecionados.filter(item => item.nome !== nome);
-        total -= price * itemExistente.quantidade;
+        itemExistente.quantidade -= 1;
+        total -= price;
         if (total < 0) total = 0;
+
+        if (itemExistente.quantidade <= 0) {
+            itensSelecionados = itensSelecionados.filter(item => item.nome !== nome);
+        }
     }
 
     totalElement.textContent = total.toFixed(2);

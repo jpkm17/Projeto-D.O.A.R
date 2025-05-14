@@ -1,0 +1,102 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f6f8;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 60px auto;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+}
+
+/* ALTERAÇÃO AQUI: layout em colunas com grid */
+.instituicao-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.instituicao {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.instituicao:hover {
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+    background-color: #eef6fc;
+}
+
+.instituicao h3 {
+    margin-bottom: 8px;
+    color: #34495e;
+}
+
+.instituicao p {
+    margin: 0;
+    color: #555;
+}
+
+
+.instituicao button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.instituicao button:hover {
+  background-color: #2980b9;
+}
+
+button.back {
+    display: block;
+    margin: 40px auto 0;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #3498db;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button.back:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .instituicao {
+        padding: 15px;
+    }
+}
