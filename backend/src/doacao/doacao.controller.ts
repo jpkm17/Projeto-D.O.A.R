@@ -28,10 +28,10 @@ export class DoacaoController {
     return this.doacaoService.updateDoacao(+id, updateDoacaoDto);
   }
 
-  @Delete(':id')
-  removeDoaca(@Param('id') id: string) {
-    return this.doacaoService.removeDoacao(+id);
-  }
+  // @Delete(':id')
+  // removeDoaca(@Param('id') id: string) {
+  //   return this.doacaoService.removeDoacao(+id);
+  // }
 
 
 

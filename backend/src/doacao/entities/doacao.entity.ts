@@ -20,7 +20,7 @@ export class Doacao {
   @Column("decimal", { precision: 10, scale: 2, default: 0 })
   valorTotal: number;
   
-  @Column({ default: "pendente" })
+  @Column({ default: "pendente", nullable: true})
   status: string; // pendente, confirmada, entregue, cancelada
   
   @Column({ nullable: true })

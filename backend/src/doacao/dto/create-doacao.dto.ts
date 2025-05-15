@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber, IsInt, IsEnum, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsInt, IsEnum, IsDateString, IsNotEmpty } from 'class-validator';
 
 export enum StatusDoacao {
   PENDENTE = 'PENDENTE',
@@ -7,30 +7,31 @@ export enum StatusDoacao {
 }
 
 export class CreateDoacaoDto {
-  @IsDateString()
-  data: Date;
+  // @IsDateString()
+  // data: Date;
 
-  @IsOptional()
-  @IsString()
-  observacao?: string;
+  // @IsOptional()
+  // @IsString()
+  // observacao?: string;
 
+  @IsNotEmpty()
   @IsNumber()
   valorTotal: number;
 
-  @IsEnum(StatusDoacao)
-  status: StatusDoacao;
+  // @IsEnum(StatusDoacao)
+  // status: StatusDoacao;
 
-  @IsOptional()
-  @IsString()
-  comprovanteDoacaoUrl?: string;
+  // @IsOptional()
+  // @IsString()
+  // comprovanteDoacaoUrl?: string;
 
-  @IsInt()
-  idInstituicao: number;
+  // @IsInt()
+  // idInstituicao: number;
 
-  @IsOptional()
-  @IsInt()
-  idCampanha?: number;
+  // @IsOptional()
+  // @IsInt()
+  // idCampanha?: number;
 
-  @IsInt()
-  idFormaPagamento: number;
+  // @IsInt()
+  // idFormaPagamento: number;
 }

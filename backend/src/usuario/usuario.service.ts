@@ -22,18 +22,18 @@ export class UsuarioService {
             throw new BadRequestException('Este email já está em uso');
         }
 
-        if (createUsuarioDto.senha !== createUsuarioDto.confimar_senha) {
-            throw new BadRequestException('Senha e confirmar senha estão divergentes');
-        }
+        // if (createUsuarioDto.senha !== createUsuarioDto.confimar_senha) {
+        //     throw new BadRequestException('Senha e confirmar senha estão divergentes');
+        // }
 
         // Verificar se o CPF já existe
-        const cpfExists = await this.usuarioRepository.findOne({
-            where: { cpf: createUsuarioDto.cpf }
-        });
+        // const cpfExists = await this.usuarioRepository.findOne({
+        //     where: { cpf: createUsuarioDto.cpf }
+        // });
 
-        if (cpfExists) {
-            throw new BadRequestException('Este CPF já está cadastrado');
-        }
+        // if (cpfExists) {
+        //     throw new BadRequestException('Este CPF já está cadastrado');
+        // }
 
         try {
             // Criar a instância do usuário

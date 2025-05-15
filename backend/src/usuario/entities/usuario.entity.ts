@@ -19,16 +19,16 @@ export class Usuario {
   @Column({ length: 100 })
   nome: string;
 
-  @Column({ length: 100, unique: true })
+  @Column({ length: 100, unique: true, nullable:true })
   email: string;
 
   @Column({ length: 100 })
   senha: string;
 
-  @Column({ length: 14, unique: true })
+  @Column({ length: 14, unique: true,  nullable:true })
   cpf: string;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ length: 20, nullable: true,  })
   telefone: string;
 
   @Column({
