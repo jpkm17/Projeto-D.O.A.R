@@ -3,6 +3,8 @@ import { InstituicaoService } from './instituicao.service';
 import { CreateInstituicaoDto } from './dto/create-instituicao.dto';
 import { UpdateInstituicaoDto } from './dto/update-instituicao.dto';
 import { Instituicao } from './entities/instituicao.entity';
+import { CreateCampanhaDto } from './dto/create-campanha.dto';
+import { Campanha } from './entities/campanha.entity';
 
 @Controller('instituicao')
 export class InstituicaoController {
@@ -32,4 +34,20 @@ export class InstituicaoController {
   remove(@Param('id') id: string): Promise<Instituicao> {
     return this.instituicaoService.remove(+id);
   }
+
+  @Post('create/campain')
+  createCampaign(@Body() createCampanhaDto: CreateCampanhaDto): Promise<Campanha> {
+    return this.instituicaoService.createCampaing(createCampanhaDto);
+  }
+
+  @Get(':id/campaings' )
+  findCampaingsByBusiness(@Param() id: number): Promise<Campanha[]> {
+    return this.instituicaoService.findAllCampaignsByInstituicao(id);
+  }
+
+  @Delete('remove/:id')
+  removeCampaing(@Param('id') id: string): Promise<Campanha> {
+    return this.instituicaoService.removeCampaing(+id);
+  }
+
 }
