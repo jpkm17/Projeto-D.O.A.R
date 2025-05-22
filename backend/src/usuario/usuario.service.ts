@@ -3,12 +3,15 @@ import { Usuario } from "./entities/usuario.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateUsuarioDto } from "./dto/create-usuario.dto";
+import { hashSync, compareSync } from 'bcrypt';
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UsuarioService {
     constructor(
         @InjectRepository(Usuario)
         private usuarioRepository: Repository<Usuario>,
+        private jwtService: JwtService // Injetar o JwtService
     ) { }
 
     // : Promise<Usuario>
@@ -48,7 +51,7 @@ export class UsuarioService {
             console.error('Erro ao criar usuário:', error);
             throw new InternalServerErrorException('Ocorreu um erro ao processar seu cadastro');
         }
-        
+
     }
 
 
@@ -74,7 +77,7 @@ export class UsuarioService {
 
         return usuario
     }
-    
+
 
     async remove(id: number): Promise<void> {
         const usuario = await this.usuarioRepository.findOneBy({ id_usuario: id })
@@ -82,6 +85,44 @@ export class UsuarioService {
         if (!usuario) throw new NotFoundException('Usuário não encontrado')
 
         await this.usuarioRepository.remove(usuario)
+    }
+
+
+    async login(email: string, senha: string): Promise<{ usuario: any; token: string }> {
+        
+        console.log(email," ", senha)
+        
+        const usuario = await this.usuarioRepository.findOneBy({ email });
+
+        if (!usuario) 
+            throw new BadRequestException('Email ou senha incorreto');
+        
+
+        // Comparar a senha fornecida com o hash armazenado
+        const senhaCorreta = compareSync(senha, usuario.senha);
+
+        if (!senhaCorreta) 
+            throw new BadRequestException('Email ou senha incorreto');
+        
+
+        // Gerar payload do JWT
+        const payload = {
+            sub: usuario.id_usuario,
+            email: usuario.email,
+            // Adicione outros campos que deseja incluir no token
+        };
+
+        // Gerar token JWT
+        const token = this.jwtService.sign(payload);
+
+        // Remover a senha do objeto de usuário antes de retorná-lo
+        const { senha: _, ...usuarioSemSenha } = usuario;
+
+        // Retornar o usuário e o token
+        return {
+            usuario: usuarioSemSenha,
+            token
+        };
     }
 
 }
