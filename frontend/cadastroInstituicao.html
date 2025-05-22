@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro de Instituição</title>
+  <link rel="stylesheet" href="css/cadastro-gpt.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <script>
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header').innerHTML = data;
+      });
+  </script>
+
+  <div class="container">
+    <h2>Cadastro de Instituição</h2>
+
+    <form id="form-instituicao">
+      <h3>Informações da Instituição</h3>
+
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required />
+
+      <label for="nome_fantasia">Nome Fantasia:</label>
+      <input type="text" id="nome_fantasia" name="nome_fantasia" />
+
+      <label for="razao_social">Razão Social:</label>
+      <input type="text" id="razao_social" name="razao_social" />
+
+      <label for="cnpj">CNPJ:</label>
+      <input type="text" id="cnpj" name="cnpj" required />
+
+      <label for="descricao">Descrição:</label>
+      <textarea id="descricao" name="descricao" rows="4" style="width: 100%; padding: 5px;"></textarea>
+
+      <label for="areas_atuacao">Áreas de Atuação:</label>
+      <input type="text" id="areas_atuacao" name="areas_atuacao" />
+
+      <label for="capacidade_recepcao">Capacidade de Recepção:</label>
+      <input type="text" id="capacidade_recepcao" name="capacidade_recepcao" />
+
+      <label for="horario_funcionamento">Horário de Funcionamento:</label>
+      <input type="text" id="horario_funcionamento" name="horario_funcionamento" />
+
+      <button type="submit" class="button">Cadastrar Instituição</button>
+    </form>
+  </div>
+
+  <button onclick="window.history.back()" class="back">« Voltar</button>
+
+  <script>
+    document.getElementById('form-instituicao').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const instituicao = {
+        nome: document.getElementById('nome').value,
+        nome_fantasia: document.getElementById('nome_fantasia').value,
+        razao_social: document.getElementById('razao_social').value,
+        cnpj: document.getElementById('cnpj').value,
+        descricao: document.getElementById('descricao').value,
+        areas_atuacao: document.getElementById('areas_atuacao').value,
+        capacidade_recepcao: document.getElementById('capacidade_recepcao').value,
+        horario_funcionamento: document.getElementById('horario_funcionamento').value
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/doar/instituicao/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(instituicao)
+        });
+
+        if (response.ok) {
+          alert('Instituição cadastrada com sucesso!');
+          window.location.href = 'instituicoes.html';
+        } else {
+          const err = await response.json();
+          alert('Erro ao cadastrar: ' + (err.message || 'Verifique os dados.'));
+        }
+      } catch (error) {
+        alert('Erro na requisição: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

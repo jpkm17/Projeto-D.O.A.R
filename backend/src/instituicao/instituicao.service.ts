@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInstituicaoDto } from './dto/create-instituicao.dto';
 import { UpdateInstituicaoDto } from './dto/update-instituicao.dto';
 import { Instituicao } from './entities/instituicao.entity';
@@ -17,7 +17,13 @@ export class InstituicaoService {
   ) { }
 
   async create(createInstituicaoDto: CreateInstituicaoDto): Promise<Instituicao> {
-    const instituicao = await this.instituicaoRepository.create(createInstituicaoDto)
+    const instituicao = this.instituicaoRepository.create(createInstituicaoDto)
+
+    try {
+      await this.instituicaoRepository.save(instituicao)
+    } catch (error) {
+      throw new BadRequestException(`Erro ao salvar instituicao`)
+    }
 
     return instituicao;
   }
