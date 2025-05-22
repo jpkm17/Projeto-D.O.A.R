@@ -1,0 +1,93 @@
+ /* Reset básico */
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ }
+
+ body {
+     background-color: #f4f6f8;
+     color: #333;
+     line-height: 1.6;
+ }
+
+ .container {
+     max-width: 700px;
+     margin: 60px auto;
+     background-color: #fff;
+     padding: 40px;
+     border-radius: 10px;
+     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+ }
+
+ h2 {
+     text-align: center;
+     margin-bottom: 30px;
+     color: #2c3e50;
+ }
+
+ label {
+     display: block;
+     margin-bottom: 8px;
+     font-weight: bold;
+ }
+
+ input[type="email"],
+ input[type="password"] {
+     width: 100%;
+     padding: 10px;
+     margin-bottom: 20px;
+     border-radius: 5px;
+     border: 1px solid #ccc;
+     transition: border 0.3s;
+ }
+
+ input:focus {
+     border-color: #3498db;
+     outline: none;
+ }
+
+ button.button {
+     background-color: #3498db;
+     color: white;
+     padding: 12px 20px;
+     border: none;
+     border-radius: 5px;
+     font-size: 16px;
+     cursor: pointer;
+     width: 100%;
+     margin-top: 20px;
+     transition: background 0.3s;
+ }
+
+ button.button:hover {
+     background-color: #2980b9;
+ }
+
+ .register-link {
+     text-align: center;
+     margin-top: 20px;
+     font-size: 15px;
+ }
+
+ .register-link a {
+     color: #3498db;
+     text-decoration: none;
+     font-weight: bold;
+     transition: color 0.3s;
+ }
+
+ .register-link a:hover {
+     color: #2980b9;
+ }
+
+ @media (max-width: 768px) {
+     .container {
+         padding: 20px;
+     }
+
+     button.button {
+         width: 100%;
+     }
+ }

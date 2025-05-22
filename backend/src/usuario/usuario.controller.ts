@@ -4,18 +4,28 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
 
+export class LoginDto {
+  email: string;
+  senha: string;
+}
+
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(private readonly usuarioService: UsuarioService) { }
 
   @Post('register')
   create(@Body() createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
     return this.usuarioService.create(createUsuarioDto);
   }
 
+  @Post('login')
+  login(@Body() loginDto: LoginDto) {
+    return this.usuarioService.login(loginDto.email, loginDto.senha);
+  }
+
   @Get('all')
   findAll() {
-   return this.usuarioService.findAll()
+    return this.usuarioService.findAll()
   }
 
   @Get('getOne/:id')

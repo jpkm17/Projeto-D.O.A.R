@@ -24,7 +24,7 @@ import { DoacaoModule } from 'src/doacao/doacao.module';
       // dropSchema: true,
     } as TypeOrmModuleOptions),
     UsuarioModule,
-    DoacaoModule,
+    // DoacaoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
