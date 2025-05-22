@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { UsuarioModule } from 'src/usuario/usuario.module';
 import { DoacaoModule } from 'src/doacao/doacao.module';
+import { InstituicaoModule } from 'src/instituicao/instituicao.module';
 
 @Module({
   imports: [
@@ -20,11 +21,12 @@ import { DoacaoModule } from 'src/doacao/doacao.module';
       database: process.env.TYPEORM_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.ts,.js}'],
-      // synchronize: true,
+      synchronize: true,
       // dropSchema: true,
     } as TypeOrmModuleOptions),
-    UsuarioModule,
+    // UsuarioModule,
     // DoacaoModule,
+    InstituicaoModule
   ],
   controllers: [AppController],
   providers: [AppService],

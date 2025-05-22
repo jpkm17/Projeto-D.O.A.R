@@ -9,7 +9,10 @@ export class Instituicao {
     @PrimaryGeneratedColumn()
     id_instituicao: number;
 
-    @Column({ length: 100 })
+    @Column({ length: 100, nullable: true })
+    nome: string;
+
+    @Column({ length: 100, nullable: true })
     nome_fantasia: string;
 
     @Column({ length: 100, nullable: true })
@@ -18,7 +21,7 @@ export class Instituicao {
     @Column({ length: 18, unique: true })
     cnpj: string;
 
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "text"})
     descricao: string;
 
     @Column({ length: 255, nullable: true })

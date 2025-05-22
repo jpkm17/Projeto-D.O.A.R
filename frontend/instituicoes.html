@@ -1,64 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Instituições Parceiras</title>
-    <link rel="stylesheet" href="css/instituicoes.css">
+  <meta charset="UTF-8">
+  <title>Instituições Parceiras</title>
+  <link rel="stylesheet" href="css/instituicoes.css">
 </head>
 <body>
-    <div id="header"></div>
+  <div id="header"></div>
 
-    <script>
-        fetch('header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
-            });
-    </script>
-</body>
-<body>
-    <div class="container">
-        <h1>Escolha uma Instituição para Doar</h1>
+  <script>
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header').innerHTML = data;
+      });
+  </script>
 
-        <div class="instituicao-lista">
-            <div class="instituicao" onclick="redirecionarParaDoacao('Esperança Viva')">
-                <h3>Instituto Esperança Viva</h3>
-                <p>Ajuda comunidades carentes com cestas básicas e apoio educacional.</p>
-            </div>
-            <div class="instituicao" onclick="redirecionarParaDoacao('Sementes do Amanhã')">
-                <h3>Projeto Sementes do Amanhã</h3>
-                <p>Educação ambiental e sustentabilidade para jovens.</p>
-            </div>
-            <div class="instituicao" onclick="redirecionarParaDoacao('Mãos que Ajudam')">
-                <h3>Mãos que Ajudam</h3>
-                <p>Apoio a pessoas em situação de rua e reintegração social.</p>
-            </div>
-            <div class="instituicao" onclick="redirecionarParaDoacao('Coração Animal')">
-                <h3>ONG Coração Animal</h3>
-                <p>Proteção e cuidado de animais abandonados.</p>
-            </div>
-            <div class="instituicao" onclick="redirecionarParaDoacao('Luz da Infância')">
-                <h3>Fundação Luz da Infância</h3>
-                <p>Apoio a crianças vítimas de violência ou abandono.</p>
-            </div>
-            <div class="instituicao" onclick="redirecionarParaDoacao('Saúde em Movimento')">
-                <h3>Saúde em Movimento</h3>
-                <p>Atendimento médico gratuito em regiões de difícil acesso.</p>
-            </div>
-        </div>
+  <div class="container">
+    <h1>Escolha uma Instituição para Doar</h1>
 
-        <button class="back" onclick="voltar()">« Voltar</button>
+    <div id="lista-instituicoes" class="instituicao-lista">
+      <!-- As instituições serão inseridas aqui dinamicamente -->
     </div>
 
-    <script>
-        function redirecionarParaDoacao(nomeInstituicao) {
-            // Redireciona para a página de doação com a instituição no parâmetro da URL
-            window.location.href = `campanhas.html?instituicao=${encodeURIComponent(nomeInstituicao)}`;
-        }
+    <button class="back" onclick="voltar()">« Voltar</button>
+  </div>
 
-        function voltar() {
-            window.location.href = 'index.html';
-        }
-    </script>
+  <script>
+    async function carregarInstituicoes() {
+      try {
+        const response = await fetch('http://localhost:3000/api/doar/instituicao/all');
+        const instituicoes = await response.json();
+
+        const lista = document.getElementById('lista-instituicoes');
+        lista.innerHTML = ''; // Limpa antes de adicionar
+
+        instituicoes.forEach(inst => {
+          const nome = inst.nome_fantasia || inst.razao_social || `Instituição ${inst.id_instituicao}`;
+         
+          const descricao = inst.descricao || 'Sem descrição disponível.';
+
+          const div = document.createElement('div');
+          div.classList.add('instituicao');
+          
+        //   div.className = 'instituicao';
+          div.onclick = () => redirecionarParaDoacao(nome);
+          div.innerHTML = `
+            <h3>${nome}</h3>
+            <p>${descricao}</p>
+          `;
+          lista.appendChild(div);
+        });
+
+      } catch (error) {
+        console.error('Erro ao carregar instituições:', error);
+        alert('Erro ao carregar as instituições.');
+      }
+    }
+
+    function redirecionarParaDoacao(nomeInstituicao) {
+      window.location.href = `campanhas.html?instituicao=${encodeURIComponent(nomeInstituicao)}`;
+    }
+
+    function voltar() {
+      window.location.href = 'index.html';
+    }
+
+    carregarInstituicoes();
+  </script>
 </body>
 </html>
