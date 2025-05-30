@@ -1,3 +1,8 @@
+window.onload = () => {
+    localStorage.clear();
+};
+
+
 const form = document.getElementById('loginForm');
 
 form.addEventListener('submit', async (e) => {
@@ -27,9 +32,11 @@ form.addEventListener('submit', async (e) => {
 
             // Salvar o token no localStorage para uso posterior
             localStorage.setItem('authToken', responseData.token);
+            // Salvar o token no localStorage para uso posterior
+            localStorage.setItem('idUser', responseData.usuario.id_usuario);
 
             // Redirecionar para a página inicial após login bem-sucedido
-            window.location.href = 'instituicoes.html';
+            window.location.href = './instituicoes/instituicoes.html';
         } else {
             const data = await response.json();
             alert(data.message || 'Falha no login');

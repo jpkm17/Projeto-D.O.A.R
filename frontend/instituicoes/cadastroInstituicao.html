@@ -4,13 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cadastro de Instituição</title>
-  <link rel="stylesheet" href="css/cadastro-gpt.css" />
+  <link rel="stylesheet" href="../css/cadastro-gpt.css" />
 </head>
 <body>
   <div id="header"></div>
 
+  <script src="../js/validarToken.js"></script>
+
   <script>
-    fetch('header.html')
+    fetch('../header/header.html')
       .then(response => response.text())
       .then(data => {
         document.getElementById('header').innerHTML = data;

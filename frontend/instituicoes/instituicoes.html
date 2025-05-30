@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Instituições Parceiras</title>
-  <link rel="stylesheet" href="css/instituicoes.css">
+  <link rel="stylesheet" href="../css/instituicoes.css">
 </head>
 <body>
   <div id="header"></div>
 
+   <script src="../js/validarToken.js"></script>
+
   <script>
-    fetch('header.html')
+    fetch('../header/header.html')
       .then(response => response.text())
       .then(data => {
         document.getElementById('header').innerHTML = data;
@@ -24,6 +26,7 @@
     </div>
 
     <button class="back" onclick="voltar()">« Voltar</button>
+    <button class="back" onclick="cadastrarInstituicao()">Cadastrar campanha</button>
   </div>
 
   <script>
@@ -59,11 +62,15 @@
     }
 
     function redirecionarParaDoacao(nomeInstituicao) {
-      window.location.href = `campanhas.html?instituicao=${encodeURIComponent(nomeInstituicao)}`;
+      window.location.href = `../campanhas/campanhas.html?instituicao=${encodeURIComponent(nomeInstituicao)}`;
     }
 
     function voltar() {
       window.location.href = 'index.html';
+    }
+
+    function cadastrarInstituicao() {
+      window.location.href = './cadastroInstituicao.html';
     }
 
     carregarInstituicoes();
