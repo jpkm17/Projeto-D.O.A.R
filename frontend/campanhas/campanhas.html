@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Campanhas</title>
-    <link rel="stylesheet" href="css/campanhas.css">
+    <link rel="stylesheet" href="../css/campanhas.css">
 </head>
 <body>
     <div id="header"></div>
 
     <script>
-        fetch('header.html')
+        fetch('../header/header.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('header').innerHTML = data;
@@ -44,11 +44,17 @@
     <script>
         function redirecionarParaDoacao(nomeCampanha) {
             // Redireciona para a página de doação com a campanha no parâmetro da URL
-            window.location.href = `index.html?campanha=${encodeURIComponent(nomeCampanha)}`;
+            window.location.href = `./itensCampanha.html?campanha=${encodeURIComponent(nomeCampanha)}`;
+            // window.location.href = `./itensCampanha.html`;
         }
 
         function voltar() {
-            window.location.href = 'instituicoes.html';
+            window.location.href = '../instituicoes/instituicoes.html';
+        }
+
+
+        function voltar() {
+            window.location.href = '../instituicoes/instituicoes.html';
         }
     </script>
 </body>
