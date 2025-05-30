@@ -24,7 +24,7 @@ import { InstituicaoModule } from 'src/instituicao/instituicao.module';
       synchronize: true,
       // dropSchema: true,
     } as TypeOrmModuleOptions),
-    // UsuarioModule,
+    UsuarioModule,
     // DoacaoModule,
     InstituicaoModule
   ],

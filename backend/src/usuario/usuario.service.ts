@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Usuario } from "./entities/usuario.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -89,22 +89,18 @@ export class UsuarioService {
 
 
     async login(email: string, senha: string): Promise<{ usuario: any; token: string }> {
-        
-        console.log(email," ", senha)
-        
+
         const usuario = await this.usuarioRepository.findOneBy({ email });
 
-        if (!usuario) 
+        if (!usuario)
             throw new BadRequestException('Email ou senha incorreto');
-        
+
 
         // Comparar a senha fornecida com o hash armazenado
         const senhaCorreta = compareSync(senha, usuario.senha);
 
-        if (!senhaCorreta) 
+        if (!senhaCorreta)
             throw new BadRequestException('Email ou senha incorreto');
-        
-
         // Gerar payload do JWT
         const payload = {
             sub: usuario.id_usuario,
@@ -123,6 +119,16 @@ export class UsuarioService {
             usuario: usuarioSemSenha,
             token
         };
+    }
+
+
+    validarToken(token: string): any {
+        try {
+            const payload = this.jwtService.verify(token);
+            return payload; // Token válido, retorna o payload
+        } catch (err) {
+           throw new UnauthorizedException('Token inválido ou expirado');
+        }
     }
 
 }
