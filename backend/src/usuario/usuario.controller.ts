@@ -23,6 +23,11 @@ export class UsuarioController {
     return this.usuarioService.login(loginDto.email, loginDto.senha);
   }
 
+  @Post('validarToken')
+  validarToken(@Body('token') token: string) {
+    return this.usuarioService.validarToken(token)
+  }
+
   @Get('all')
   findAll() {
     return this.usuarioService.findAll()
