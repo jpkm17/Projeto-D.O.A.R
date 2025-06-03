@@ -8,7 +8,7 @@ import { Campanha } from './entities/campanha.entity';
 
 @Controller('instituicao')
 export class InstituicaoController {
-  constructor(private readonly instituicaoService: InstituicaoService) {}
+  constructor(private readonly instituicaoService: InstituicaoService) { }
 
   @Post('create')
   create(@Body() createInstituicaoDto: CreateInstituicaoDto): Promise<Instituicao> {
@@ -18,6 +18,11 @@ export class InstituicaoController {
   @Get('all')
   findAll(): Promise<Instituicao[]> {
     return this.instituicaoService.findAll();
+  }
+
+  @Post('allByUser')
+  findAllByUser(@Body('idUser') id: number): Promise<Instituicao[]> {
+    return this.instituicaoService.findAllbyUser(id);
   }
 
   @Get('getOne/:id')
@@ -40,7 +45,7 @@ export class InstituicaoController {
     return this.instituicaoService.createCampaing(createCampanhaDto);
   }
 
-  @Get(':id/campaings' )
+  @Get(':id/campaings')
   findCampaingsByBusiness(@Param() id: number): Promise<Campanha[]> {
     return this.instituicaoService.findAllCampaignsByInstituicao(id);
   }

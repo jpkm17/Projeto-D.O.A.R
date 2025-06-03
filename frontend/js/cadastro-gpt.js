@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 form.reset(); // Limpa o formulário
                 
                 // Opcional: redirecionar após sucesso
-                // window.location.href = "login.html";
+                window.location.href = "./login.html";
             })
             .catch(error => {
                 console.error("Erro ao enviar para API:", error);

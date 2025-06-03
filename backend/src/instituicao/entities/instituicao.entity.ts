@@ -24,31 +24,19 @@ export class Instituicao {
     @Column({ type: "text"})
     descricao: string;
 
-    @Column({ length: 255, nullable: true })
-    areas_atuacao: string;
-
-    @Column({ length: 50, nullable: true })
-    capacidade_recepcao: string;
-
-    @Column({ length: 100, nullable: true })
-    horario_funcionamento: string;
-
     @CreateDateColumn({ type: 'timestamp' }) //quando for registrar no banco,ele salva a data do cadastro
     creationDate: Date;
 
-    @Column({ default: true })
-    ativo: boolean;
-
     @ManyToOne(() => Usuario, usuario => usuario.instituicoesAdministradas)
     administrador: Usuario;
-
+    
     @OneToOne(() => Endereco)
     @JoinColumn({ name: 'endereco_id' })
     endereco: Endereco;
-
+    
     @OneToMany(() => Doacao, doacao => doacao.instituicao)
     doacoesRecebidas: Doacao[];
-
+    
     @OneToMany(() => Campanha, campanha => campanha.instituicao)
     campanhas: Campanha[];
 }

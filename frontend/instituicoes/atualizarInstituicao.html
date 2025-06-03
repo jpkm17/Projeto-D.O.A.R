@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Atualizar Instituição</title>
+  <link rel="stylesheet" href="../css/cadastro-gpt.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <script>
+    fetch('../header/header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header').innerHTML = data;
+      });
+  </script>
+
+  <div class="container">
+    <h2>Atualizar Instituição</h2>
+
+    <form id="form-instituicao">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required />
+
+      <label for="nome_fantasia">Nome Fantasia:</label>
+      <input type="text" id="nome_fantasia" name="nome_fantasia" />
+
+      <label for="razao_social">Razão Social:</label>
+      <input type="text" id="razao_social" name="razao_social" />
+
+      <label for="cnpj">CNPJ:</label>
+      <input type="text" id="cnpj" name="cnpj" required />
+
+      <label for="descricao">Descrição:</label>
+      <textarea id="descricao" name="descricao" rows="4" style="width: 100%; padding: 5px;" required></textarea>
+
+      <label for="areas_atuacao">Áreas de Atuação:</label>
+      <input type="text" id="areas_atuacao" name="areas_atuacao" />
+
+      <label for="capacidade_recepcao">Capacidade de Recepção:</label>
+      <input type="text" id="capacidade_recepcao" name="capacidade_recepcao" />
+
+      <label for="horario_funcionamento">Horário de Funcionamento:</label>
+      <input type="text" id="horario_funcionamento" name="horario_funcionamento" />
+
+      <button type="submit" class="button">Atualizar Instituição</button>
+    </form>
+  </div>
+
+  <button onclick="window.history.back()" class="back">« Voltar</button>
+
+  <script>
+    // Captura o ID da URL (ex: atualizar-instituicao.html?id=2)
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+
+    if (!id) {
+      alert("ID da instituição não fornecido.");
+      window.location.href = "instituicoes.html";
+    }
+
+    // Preenche os campos com os dados da instituição
+    async function carregarInstituicao() {
+      try {
+        const response = await fetch(`http://localhost:3000/api/doar/instituicao/getOne/${id}`);
+        const data = await response.json();
+
+        document.getElementById("nome").value = data.nome || "";
+        document.getElementById("nome_fantasia").value = data.nome_fantasia || "";
+        document.getElementById("razao_social").value = data.razao_social || "";
+        document.getElementById("cnpj").value = data.cnpj || "";
+        document.getElementById("descricao").value = data.descricao || "";
+        document.getElementById("areas_atuacao").value = data.areas_atuacao || "";
+        document.getElementById("capacidade_recepcao").value = data.capacidade_recepcao || "";
+        document.getElementById("horario_funcionamento").value = data.horario_funcionamento || "";
+      } catch (error) {
+        alert("Erro ao buscar dados da instituição.");
+        console.error(error);
+        window.location.href = "instituicoes.html";
+      }
+    }
+
+    carregarInstituicao();
+
+    // Atualiza os dados da instituição
+    document.getElementById("form-instituicao").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const instituicaoAtualizada = {
+        nome: document.getElementById("nome").value,
+        nome_fantasia: document.getElementById("nome_fantasia").value,
+        razao_social: document.getElementById("razao_social").value,
+        cnpj: document.getElementById("cnpj").value,
+        descricao: document.getElementById("descricao").value,
+        areas_atuacao: document.getElementById("areas_atuacao").value,
+        capacidade_recepcao: document.getElementById("capacidade_recepcao").value,
+        horario_funcionamento: document.getElementById("horario_funcionamento").value
+      };
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/doar/instituicao/update/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(instituicaoAtualizada)
+        });
+
+        if (response.ok) {
+          alert("Instituição atualizada com sucesso!");
+          window.location.href = "instituicoes.html";
+        } else {
+          const error = await response.json();
+          alert("Erro ao atualizar: " + (error.message || "Verifique os dados."));
+        }
+      } catch (error) {
+        alert("Erro na requisição: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
