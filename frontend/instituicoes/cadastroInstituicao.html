@@ -9,7 +9,7 @@
 <body>
   <div id="header"></div>
 
-  <script src="../js/validarToken.js"></script>
+  <!-- <script src="../js/validarToken.js"></script> -->
 
   <script>
     fetch('../header/header.html')
@@ -40,15 +40,6 @@
       <label for="descricao">Descrição:</label>
       <textarea id="descricao" name="descricao" rows="4" style="width: 100%; padding: 5px;"></textarea>
 
-      <label for="areas_atuacao">Áreas de Atuação:</label>
-      <input type="text" id="areas_atuacao" name="areas_atuacao" />
-
-      <label for="capacidade_recepcao">Capacidade de Recepção:</label>
-      <input type="text" id="capacidade_recepcao" name="capacidade_recepcao" />
-
-      <label for="horario_funcionamento">Horário de Funcionamento:</label>
-      <input type="text" id="horario_funcionamento" name="horario_funcionamento" />
-
       <button type="submit" class="button">Cadastrar Instituição</button>
     </form>
   </div>
@@ -65,9 +56,7 @@
         razao_social: document.getElementById('razao_social').value,
         cnpj: document.getElementById('cnpj').value,
         descricao: document.getElementById('descricao').value,
-        areas_atuacao: document.getElementById('areas_atuacao').value,
-        capacidade_recepcao: document.getElementById('capacidade_recepcao').value,
-        horario_funcionamento: document.getElementById('horario_funcionamento').value
+        idUser: window.localStorage.getItem("idUser")
       };
 
       try {

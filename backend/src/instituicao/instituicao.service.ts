@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Campanha } from './entities/campanha.entity';
 import { CreateCampanhaDto } from './dto/create-campanha.dto';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Injectable()
 export class InstituicaoService {
@@ -14,15 +15,35 @@ export class InstituicaoService {
     private instituicaoRepository: Repository<Instituicao>,
     @InjectRepository(Campanha)
     private campanhaRepository: Repository<Campanha>,
+    @InjectRepository(Usuario)
+    private usuarioRepository: Repository<Usuario>,
   ) { }
 
   async create(createInstituicaoDto: CreateInstituicaoDto): Promise<Instituicao> {
-    const instituicao = this.instituicaoRepository.create(createInstituicaoDto)
 
+    const { idUser, ...rest } = createInstituicaoDto
+    const { cnpj } = createInstituicaoDto
+
+    let instituicao = await this.instituicaoRepository.findOneBy({ cnpj })
+
+    if (instituicao) {
+      throw new BadRequestException("Esse cnpj ja esta sendo utilizado")
+    }
+
+    const user = await this.usuarioRepository.findOneBy({ id_usuario: idUser })
+
+    if (!user) {
+      throw new BadRequestException("Erro: não foi possivel criar instituicao")
+    }
+
+    instituicao = this.instituicaoRepository.create(createInstituicaoDto)
+    instituicao.administrador = user
+
+    console.log(instituicao)
     try {
       await this.instituicaoRepository.save(instituicao)
     } catch (error) {
-      throw new BadRequestException(`Erro ao salvar instituicao`)
+      throw new BadRequestException(`Erro ao cadastrar instituicao, ${error}`)
     }
 
     return instituicao;
@@ -39,6 +60,21 @@ export class InstituicaoService {
 
     return instituicao
   }
+
+  async findAllbyUser(id: number): Promise<Instituicao[]> {
+    const user = await this.usuarioRepository.findOneBy({ id_usuario: id });
+
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+
+    const instituicoes = await this.instituicaoRepository.find({ where: { administrador: user } });
+
+    console.log(instituicoes)
+
+    if (instituicoes.length === 0) throw new NotFoundException('Instituições não encontradas');
+
+    return instituicoes;
+  }
+
 
   async update(id: number, updateInstituicaoDto: UpdateInstituicaoDto): Promise<Instituicao> {
     const instituicao = await this.instituicaoRepository.findOneBy({ id_instituicao: id })

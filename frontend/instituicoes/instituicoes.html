@@ -8,7 +8,7 @@
 <body>
   <div id="header"></div>
 
-   <script src="../js/validarToken.js"></script>
+  <script src="../js/validarToken.js"></script>
 
   <script>
     fetch('../header/header.html')
@@ -26,7 +26,9 @@
     </div>
 
     <button class="back" onclick="voltar()">« Voltar</button>
-    <button class="back" onclick="cadastrarInstituicao()">Cadastrar campanha</button>
+    <button class="back" onclick="cadastrarInstituicao()">Cadastrar Instituição</button>
+    <button class="back" onclick="atualizarUmaInstituicao()">atualizar instit</button>
+    <button class="back" onclick="listarMInhaInsituicoes()">Minhas insti</button>
   </div>
 
   <script>
@@ -38,22 +40,23 @@
         const lista = document.getElementById('lista-instituicoes');
         lista.innerHTML = ''; // Limpa antes de adicionar
 
-        instituicoes.forEach(inst => {
-          const nome = inst.nome_fantasia || inst.razao_social || `Instituição ${inst.id_instituicao}`;
-         
-          const descricao = inst.descricao || 'Sem descrição disponível.';
+        if (instituicoes && instituicoes.length > 0) {
+          instituicoes.forEach(inst => {
+            const nome = inst.nome_fantasia || inst.razao_social || `Instituição ${inst.id_instituicao}`;
+            const descricao = inst.descricao || 'Sem descrição disponível.';
 
-          const div = document.createElement('div');
-          div.classList.add('instituicao');
-          
-        //   div.className = 'instituicao';
-          div.onclick = () => redirecionarParaDoacao(nome);
-          div.innerHTML = `
-            <h3>${nome}</h3>
-            <p>${descricao}</p>
-          `;
-          lista.appendChild(div);
-        });
+            const div = document.createElement('div');
+            div.classList.add('instituicao');
+            div.onclick = () => redirecionarParaDoacao(nome);
+            div.innerHTML = `
+              <h3>${nome}</h3>
+              <p>${descricao}</p>
+            `;
+            lista.appendChild(div);
+          });
+        } else {
+          lista.innerHTML = '<h3>Não há instituições disponíveis.</h3>';
+        }
 
       } catch (error) {
         console.error('Erro ao carregar instituições:', error);
@@ -71,6 +74,10 @@
 
     function cadastrarInstituicao() {
       window.location.href = './cadastroInstituicao.html';
+    }
+
+    function listarMInhaInsituicoes() {
+      window.location.href = './instituicoesDoUsuario.html';
     }
 
     carregarInstituicoes();

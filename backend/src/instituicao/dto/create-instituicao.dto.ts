@@ -1,4 +1,4 @@
-import { IsString, IsEmail, Length, IsOptional, IsInt, IsNotEmpty } from 'class-validator';
+import { IsString, IsEmail, Length, IsOptional, IsInt, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateInstituicaoDto {
   @IsString()
@@ -18,27 +18,10 @@ export class CreateInstituicaoDto {
   @IsNotEmpty()
   cnpj: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // telefone: string;
-
-  // @IsOptional()
-  // @IsInt()
-  // idEndereco?: number;
-
   @IsString()
   @IsOptional()
   descricao: string;
 
-  @IsString()
-  @IsOptional()
-  areas_atuacao: string;
-
-  @IsString()
-  @IsOptional()
-  capacidade_receptacao: string;
-
-  @IsString()
-  @IsOptional()
-  horario_funcionamento: string;
+  @IsNotEmpty()
+  idUser: number; //Para relacionar o user com a instituicao
 }

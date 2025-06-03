@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro de Campanha</title>
+  <link rel="stylesheet" href="../css/cadastro-gpt.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <script>
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header').innerHTML = data;
+      });
+  </script>
+
+  <div class="container">
+    <h2>Cadastro de Campanha</h2>
+
+    <form id="form-campanha">
+      <h3>Informações da Campanha</h3>
+
+      <label for="nome">Nome da Campanha:</label>
+      <input type="text" id="nome" name="nome" required />
+
+      <label for="descricao">Descrição:</label>
+      <textarea id="descricao" name="descricao" rows="4" style="width: 100%; padding: 5px;" required></textarea>
+
+      <label for="data_inicio">Data de Início:</label>
+      <input type="date" id="data_inicio" name="data_inicio" required />
+
+      <label for="data_fim">Data de Término:</label>
+      <input type="date" id="data_fim" name="data_fim" required />
+
+      <label for="instituicao_id">Instituição:</label>
+      <select id="instituicao_id" name="instituicao_id" required>
+        <option value="">Selecione uma instituição</option>
+      </select>
+
+      <button type="submit" class="button">Cadastrar Campanha</button>
+    </form>
+  </div>
+
+  <button onclick="window.history.back()" class="back">« Voltar</button>
+
+  <script>
+    // Carrega instituições no select
+    async function carregarInstituicoes() {
+      try {
+        const response = await fetch('http://localhost:3000/api/doar/instituicao/all');
+        const instituicoes = await response.json();
+
+        const select = document.getElementById('instituicao_id');
+        instituicoes.forEach(inst => {
+          const option = document.createElement('option');
+          option.value = inst.id_instituicao;
+          option.textContent = inst.nome || inst.nome_fantasia || `Instituição ${inst.id_instituicao}`;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        alert('Erro ao carregar instituições: ' + error.message);
+      }
+    }
+
+    carregarInstituicoes();
+
+    // Envio do formulário
+    document.getElementById('form-campanha').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const campanha = {
+        nome: document.getElementById('nome').value,
+        descricao: document.getElementById('descricao').value,
+        data_inicio: document.getElementById('data_inicio').value,
+        data_fim: document.getElementById('data_fim').value,
+        instituicaoId: parseInt(document.getElementById('instituicao_id').value)
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/doar/campanha', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(campanha)
+        });
+
+        if (response.ok) {
+          alert('Campanha cadastrada com sucesso!');
+          window.location.href = 'campanhas.html';
+        } else {
+          const err = await response.json();
+          alert('Erro ao cadastrar campanha: ' + (err.message || 'Verifique os dados.'));
+        }
+      } catch (error) {
+        alert('Erro na requisição: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

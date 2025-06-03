@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Minhas Instituições</title>
+  <link rel="stylesheet" href="../css/cadastro-gpt.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <script>
+    fetch('../header/header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header').innerHTML = data;
+      });
+  </script>
+
+  <div class="container">
+    <h2>Minhas Instituições</h2>
+    <div id="instituicoes-lista">
+      <p>Carregando instituições...</p>
+    </div>
+  </div>
+
+  <button onclick="window.history.back()" class="back">« Voltar</button>
+
+  <script>
+    async function carregarInstituicoesDoUsuario() {
+      const idUser = localStorage.getItem("idUser");
+      const lista = document.getElementById("instituicoes-lista");
+
+      if (!idUser) {
+        lista.innerHTML = "<p>Usuário não autenticado.</p>";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/api/doar/instituicao/allByUser", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: idUser })
+        });
+
+        if (!response.ok) throw new Error();
+
+        const instituicoes = await response.json();
+
+        if (!instituicoes.length) {
+          lista.innerHTML = "<p>Não há instituições disponíveis.</p>";
+          return;
+        }
+
+        lista.innerHTML = "";
+        instituicoes.forEach(inst => {
+          const div = document.createElement("div");
+          div.classList.add("instituicao-card");
+          div.innerHTML = `
+            <h3>${inst.nome || "Instituição sem nome"}</h3>
+            <p><strong>CNPJ:</strong> ${inst.cnpj}</p>
+            <p><strong>Área de Atuação:</strong> ${inst.areas_atuacao || "Não informada"}</p>
+            <p><strong>Descrição:</strong> ${inst.descricao || "Sem descrição"}</p>
+            <button onclick="editarInstituicao(${inst.id_instituicao})" class="button">Editar</button>
+          `;
+          lista.appendChild(div);
+        });
+
+      } catch (err) {
+        lista.innerHTML = "<p>Não há instituições disponíveis.</p>";
+      }
+    }
+
+    function editarInstituicao(id) {
+      window.location.href = `atualizar-instituicao.html?id=${id}`;
+    }
+
+    carregarInstituicoesDoUsuario();
+  </script>
+
+  <style>
+    .instituicao-card {
+      background-color: white;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+      text-align: left;
+    }
+
+    .instituicao-card h3 {
+      margin-top: 0;
+      color: #05722d;
+    }
+
+    .instituicao-card p {
+      margin: 5px 0;
+    }
+
+    .instituicao-card .button {
+      margin-top: 10px;
+      width: auto;
+    }
+  </style>
+</body>
+</html>
