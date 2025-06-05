@@ -3,9 +3,6 @@ import { CreateInstituicaoDto } from './create-instituicao.dto';
 import { IsOptional, IsString, IsEmail, IsInt, Length } from 'class-validator';
 
 export class UpdateInstituicaoDto extends PartialType(CreateInstituicaoDto) {
-  @IsInt()
-  id: number;
-
   @IsOptional()
   @IsString()
   nome?: string;

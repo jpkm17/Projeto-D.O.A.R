@@ -97,6 +97,8 @@ export class InstituicaoService {
 
     Object.assign(instituicao, updateInstituicaoDto)
 
+    await this.instituicaoRepository.save(instituicao)
+
     return instituicao
   }
 
