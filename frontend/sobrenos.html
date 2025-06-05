@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nós - Doe Alimentos</title>
+    <link rel="stylesheet" href="css/index-gpt.css">
+</head>
+<body>
+    <style>
+        p {
+            text-align: left;
+        }
+    </style>
+    <div id="header"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            });
+    </script>
+
+    <main>
+        <div class="container">
+            <h2>Sobre Nós</h2>
+            <p>
+                Bem-vindo à DOAR, uma plataforma criada para conectar doadores a causas que transformam vidas. Nosso principal objetivo é centralizar e potencializar campanhas de doação, com um foco especial em segurança alimentar – porque acreditamos que alimento é um direito básico e que ninguém deveria passar fome.
+            </p>
+            <h2>O que fazemos</h2>
+            <p>
+                A DOAR atua como uma ponte entre empresas, organizações e pessoas que querem ajudar. Empresas podem se cadastrar e divulgar suas campanhas de doação em nosso site, enquanto doadores encontram iniciativas confiáveis em um só lugar. Seja doando alimentos, roupas, produtos de higiene ou outros itens essenciais, facilitamos o processo para que a solidariedade chegue onde é mais necessária.
+            </p>
+            <hr>
+            <br>
+            <h2>Missão</h2>
+            <p>
+                Facilitar e potencializar a doação de alimentos e outros recursos essenciais, conectando empresas, organizações e doadores em uma plataforma transparente e acessível. Nosso objetivo é combater a fome, promover a solidariedade e garantir que nenhuma doação se perca no caminho.
+            </p>
+            <h2>Visão</h2>
+            <p>
+                Ser a maior rede de impacto social do Brasil, reconhecida por transformar a cultura de doação em um movimento eficiente, colaborativo e sustentável – onde todos possam participar e nenhuma necessidade básica fique sem resposta.
+            </p>
+            <h2>
+                Valores
+            </h2>
+            <p2>
+                ✅ Transparência: Garantimos que todas as campanhas e doações sejam rastreáveis e confiáveis.<br>
+                ✅ Solidariedade: Acreditamos que a generosidade é o motor da mudança social.<br>
+                ✅ Eficiência: Centralizamos recursos para evitar desperdício e otimizar o impacto.<br>
+                ✅ Inclusão: Atuamos sem distinção, priorizando quem mais precisa.<br>
+                ✅ Sustentabilidade: Promovemos doações que respeitem o meio ambiente e as comunidades.
+            </p2>
+        </div>
+    </main>
+</body>

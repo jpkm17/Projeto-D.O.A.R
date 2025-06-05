@@ -22,7 +22,7 @@ header {
 
 /* Container do cabeçalho */
 .cabecalho {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 30px;
     display: flex;
@@ -37,9 +37,22 @@ header {
 }
 
 /* Menu de navegação */
-.menu nav {
+.menu {
+    margin-left: auto;
+}
+
+.menu nav ul{
     display: flex;
-    gap: 30px;
+    gap: 50px;
+    /*grid-auto-flow: column;
+    justify-content: end;*/
+    list-style: none;
+    margin: 0;
+}
+
+.menu nav li {
+    display: inline-block;
+    position: relative;
 }
 
 .menu nav a {
@@ -54,6 +67,27 @@ header {
 .menu nav a:hover {
     color: #3498db;
     border-bottom: 2px solid #3498db;
+}
+
+.dropdown-menu {
+    background-color: #ffffff;
+    position: absolute;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    /**/display: none;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+}
+
+.dropdown-menu a {
+    display: block;
+    margin: 30px;
+    padding: 15px;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    text-align: center;
 }
 
 /* Espaço reservado para ícones sociais, se for usar futuramente */

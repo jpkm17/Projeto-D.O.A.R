@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Instituições Parceiras</title>
-  <link rel="stylesheet" href="../css/instituicoes.css">
+  <link rel="stylesheet" href="css/instituicoes.css">
 </head>
 <body>
   <div id="header"></div>
@@ -11,7 +11,7 @@
   <script src="../js/validarToken.js"></script>
 
   <script>
-    fetch('../header/header.html')
+    fetch('header.html')
       .then(response => response.text())
       .then(data => {
         document.getElementById('header').innerHTML = data;
