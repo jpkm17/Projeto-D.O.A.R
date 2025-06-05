@@ -39,7 +39,7 @@ export class InstituicaoService {
     instituicao = this.instituicaoRepository.create(createInstituicaoDto)
     instituicao.administrador = user
 
-    console.log(instituicao)
+    
     try {
       await this.instituicaoRepository.save(instituicao)
     } catch (error) {
@@ -62,18 +62,32 @@ export class InstituicaoService {
   }
 
   async findAllbyUser(id: number): Promise<Instituicao[]> {
-    const user = await this.usuarioRepository.findOneBy({ id_usuario: id });
+   
 
-    if (!user) throw new NotFoundException('Usuário não encontrado');
+    // Buscando o usuário com a opção de "where"
+    const user = await this.usuarioRepository.findOne({
+      where: { id_usuario: id },
+    });
 
-    const instituicoes = await this.instituicaoRepository.find({ where: { administrador: user } });
+    // Se o usuário não for encontrado, lançar exceção
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
 
-    console.log(instituicoes)
+    // Buscando as instituições relacionadas ao usuário
+    const instituicoes = await this.instituicaoRepository.find({
+      where: { administrador: { id_usuario: id } },  // Garantindo que estamos buscando pela chave correta do usuário
+      relations: ['administrador'],
+    });
 
-    if (instituicoes.length === 0) throw new NotFoundException('Instituições não encontradas');
+    // Se não houver instituições, lançar exceção
+    if (instituicoes.length === 0) {
+      throw new NotFoundException('Instituições não encontradas');
+    }
 
     return instituicoes;
   }
+
 
 
   async update(id: number, updateInstituicaoDto: UpdateInstituicaoDto): Promise<Instituicao> {

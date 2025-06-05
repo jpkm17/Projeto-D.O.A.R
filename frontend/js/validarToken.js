@@ -22,7 +22,6 @@ async function validarToken() {
         }
 
         const data = await response.json();
-        console.log(data);
         // Verificações com data.sub etc...
 
     } catch (error) {

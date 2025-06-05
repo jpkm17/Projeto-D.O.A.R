@@ -24,11 +24,9 @@ form.addEventListener('submit', async (e) => {
             // Obter a resposta JSON e armazenar em uma variável
             const responseData = await response.json();
 
-            console.log('Resposta completa:', responseData);
-
             // Acessar os dados do usuário e token
-            console.log('Dados do usuário:', responseData.usuario);
-            console.log('Token JWT:', responseData.token);
+            // console.log('Dados do usuário:', responseData.usuario);
+            // console.log('Token JWT:', responseData.token);
 
             // Salvar o token no localStorage para uso posterior
             localStorage.setItem('authToken', responseData.token);
