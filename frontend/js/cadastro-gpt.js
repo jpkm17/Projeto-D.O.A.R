@@ -67,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 submitButton.disabled = true;
             }
 
-            console.log(senha.value)
             
             // Coleta os dados do formulário
             const dados = {
@@ -78,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 senha: String(senha.value)
             };
             
-            console.log("Dados a serem enviados:", dados);
             
             // Envia os dados para a API
             fetch('http://localhost:3000/api/doar/usuario/register', {
@@ -100,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(data => {
                 alert("Cadastro realizado com sucesso!");
-                console.log("Resposta da API:", data);
                 form.reset(); // Limpa o formulário
                 
                 // Opcional: redirecionar após sucesso

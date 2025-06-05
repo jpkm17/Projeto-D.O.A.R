@@ -28,6 +28,7 @@ export class Instituicao {
     creationDate: Date;
 
     @ManyToOne(() => Usuario, usuario => usuario.instituicoesAdministradas)
+    @JoinColumn()
     administrador: Usuario;
     
     @OneToOne(() => Endereco)
