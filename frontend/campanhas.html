@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Campanhas</title>
     <link rel="stylesheet" href="./css/campanhas.css">
 </head>
+
 <body>
     <div id="header"></div>
 
@@ -20,38 +22,62 @@
         <h1>Escolha uma Campanha para Doar</h1>
 
         <div class="campanha-lista">
-            <div class="campanha" onclick="redirecionarParaDoacao('Campanha Inverno Solidário')">
-                <h3>Campanha Inverno Solidário</h3>
-                <p>Ajude pessoas em situação de rua com doações de agasalhos, cobertores e calçados.</p>
-            </div>
-            <div class="campanha" onclick="redirecionarParaDoacao('Campanha Natal Feliz')">
-                <h3>Campanha Natal Feliz</h3>
-                <p>Doe brinquedos e alimentos para tornar o Natal mais especial para famílias carentes.</p>
-            </div>
-            <div class="campanha" onclick="redirecionarParaDoacao('Ajuda Animal')">
-                <h3>Ajuda Animal</h3>
-                <p>Contribua com ração, medicamentos ou valores para abrigos de animais abandonados.</p>
-            </div>
-            <div class="campanha" onclick="redirecionarParaDoacao('Volta às Aulas')">
-                <h3>Volta às Aulas</h3>
-                <p>Doe materiais escolares para crianças em vulnerabilidade social.</p>
-            </div>
         </div>
 
         <button class="back" onclick="voltar()">« Voltar</button>
     </div>
 
     <script>
-        function redirecionarParaDoacao(nomeCampanha) {
-            // Redireciona para a página de doação com a campanha no parâmetro da URL
-            window.location.href = `./itensCampanha.html?campanha=${encodeURIComponent(nomeCampanha)}`;
-            // window.location.href = `./itensCampanha.html`;
-        }
+        document.addEventListener("DOMContentLoaded", async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const instituicaoId = urlParams.get("id")
 
-        function voltar() {
-            window.location.href = './instituicoes.html';
+            if (!instituicaoId || instituicaoId ===  undefined) {
+                alert("ID da instituição não informado.");
+                window.location.href='./instituicoesDoUsuario.html'
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/doar/instituicao/${instituicaoId}/campaings`);
+                if (!response.ok) throw new Error("Erro ao buscar campanhas");
+
+                const campanhas = await response.json();
+
+                const listaContainer = document.querySelector(".campanha-lista");
+                listaContainer.innerHTML = ""; // Limpa campanhas fixas
+
+                if (campanhas.length === 0) {
+                    listaContainer.innerHTML = "<p>Nenhuma campanha disponível no momento.</p>";
+                    return;
+                }
+
+                campanhas.forEach(campanha => {
+                    const div = document.createElement("div");
+                    div.className = "campanha";
+                    // div.onclick = () => redirecionarParaDoacao(campanha.id);
+                    div.innerHTML = `
+                    <h3>${campanha.titulo}</h3>
+                    <p>${campanha.descricao}</p>
+                    <button onclick="editarCampanha(${campanha.id})" class="button">Editar</button>
+                `;
+                    listaContainer.appendChild(div);
+                });
+
+            } catch (error) {
+                console.error("Erro ao carregar campanhas:", error);
+                listaContainer.innerHTML = "<p style='color: red;'>Não foi possível carregar as campanhas. Tente novamente mais tarde.</p>";
+            }
+        });
+
+
+        function editarCampanha(id) {
+            console.log(id)
+            // window.location.href='./'
+
         }
 
     </script>
+
 </body>
+
 </html>
