@@ -46,8 +46,8 @@ export class InstituicaoController {
   }
 
   @Get(':id/campaings')
-  findCampaingsByBusiness(@Param() id: number): Promise<Campanha[]> {
-    return this.instituicaoService.findAllCampaignsByInstituicao(id);
+  findCampaingsByBusiness(@Param('id') id: string): Promise<Campanha[]> {
+    return this.instituicaoService.findAllCampaignsByInstituicao(+id);
   }
 
   @Delete('remove/:id')

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Campanhas</title>
-    <link rel="stylesheet" href="../css/campanhas.css">
+    <link rel="stylesheet" href="./css/campanhas.css">
 </head>
 <body>
     <div id="header"></div>
 
     <script>
-        fetch('../header/header.html')
+        fetch('./header.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('header').innerHTML = data;
@@ -49,13 +49,9 @@
         }
 
         function voltar() {
-            window.location.href = '../instituicoes/instituicoes.html';
+            window.location.href = './instituicoes.html';
         }
 
-
-        function voltar() {
-            window.location.href = '../instituicoes/instituicoes.html';
-        }
     </script>
 </body>
 </html>

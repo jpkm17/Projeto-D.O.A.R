@@ -8,7 +8,7 @@
 <body>
   <div id="header"></div>
 
-  <script src="../js/validarToken.js"></script>
+  <script src="./js/validarToken.js"></script>
 
   <script>
     fetch('header.html')
@@ -25,10 +25,7 @@
       <!-- As instituições serão inseridas aqui dinamicamente -->
     </div>
 
-    <button class="back" onclick="voltar()">« Voltar</button>
-    <button class="back" onclick="cadastrarInstituicao()">Cadastrar Instituição</button>
-    <button class="back" onclick="atualizarUmaInstituicao()">atualizar instit</button>
-    <button class="back" onclick="listarMInhaInsituicoes()">Minhas insti</button>
+   
   </div>
 
   <script>
@@ -65,7 +62,7 @@
     }
 
     function redirecionarParaDoacao(nomeInstituicao) {
-      window.location.href = `../campanhas/campanhas.html?instituicao=${encodeURIComponent(nomeInstituicao)}`;
+      window.location.href = `./campanhas/campanhas.html?instituicao=${encodeURIComponent(nomeInstituicao)}`;
     }
 
     function voltar() {

@@ -39,7 +39,7 @@ export class InstituicaoService {
     instituicao = this.instituicaoRepository.create(createInstituicaoDto)
     instituicao.administrador = user
 
-    
+
     try {
       await this.instituicaoRepository.save(instituicao)
     } catch (error) {
@@ -62,7 +62,7 @@ export class InstituicaoService {
   }
 
   async findAllbyUser(id: number): Promise<Instituicao[]> {
-   
+
 
     // Buscando o usuário com a opção de "where"
     const user = await this.usuarioRepository.findOne({
@@ -111,7 +111,23 @@ export class InstituicaoService {
   }
 
   async createCampaing(createCampanhaDto: CreateCampanhaDto): Promise<Campanha> {
-    const campanha = await this.campanhaRepository.create(createCampanhaDto)
+    // Extrai o instituicaoId e remove do DTO
+    const { instituicaoId, ...campanhaData } = createCampanhaDto;
+
+    // Aqui você pode usar o instituicaoId para buscar a entidade da instituição, por exemplo:
+    const instituicao = await this.instituicaoRepository.findOne({ where: { id_instituicao: instituicaoId } });
+
+    if (!instituicao) {
+      throw new NotFoundException('Instituição não encontrada');
+    }
+
+    // Cria a campanha com os dados restantes
+    const campanha = this.campanhaRepository.create(campanhaData);
+
+    // Associa a instituição, se necessário
+    campanha.instituicao = instituicao;
+
+    await this.campanhaRepository.save(campanha);
 
     return campanha;
   }

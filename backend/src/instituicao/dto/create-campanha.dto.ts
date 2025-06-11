@@ -1,4 +1,4 @@
-import { IsString, IsDateString, IsOptional } from 'class-validator';
+import { IsString, IsDateString, IsOptional, IsNumber, IsDate } from 'class-validator';
 
 export class CreateCampanhaDto {
   @IsString()
@@ -16,4 +16,7 @@ export class CreateCampanhaDto {
   @IsOptional()
   @IsString()
   imagemUrl?: string;
+
+  @IsNumber()
+  instituicaoId: number;
 }

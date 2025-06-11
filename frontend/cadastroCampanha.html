@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastro de Campanha</title>
-  <link rel="stylesheet" href="../css/cadastro-gpt.css" />
+  <link rel="stylesheet" href="./css/cadastro-gpt.css" />
 </head>
+
 <body>
   <div id="header"></div>
 
@@ -35,10 +37,7 @@
       <label for="data_fim">Data de Término:</label>
       <input type="date" id="data_fim" name="data_fim" required />
 
-      <label for="instituicao_id">Instituição:</label>
-      <select id="instituicao_id" name="instituicao_id" required>
-        <option value="">Selecione uma instituição</option>
-      </select>
+
 
       <button type="submit" class="button">Cadastrar Campanha</button>
     </form>
@@ -48,39 +47,34 @@
 
   <script>
     // Carrega instituições no select
-    async function carregarInstituicoes() {
-      try {
-        const response = await fetch('http://localhost:3000/api/doar/instituicao/all');
-        const instituicoes = await response.json();
+    // Pega a string de query da URL
+    const queryString = window.location.search;
 
-        const select = document.getElementById('instituicao_id');
-        instituicoes.forEach(inst => {
-          const option = document.createElement('option');
-          option.value = inst.id_instituicao;
-          option.textContent = inst.nome || inst.nome_fantasia || `Instituição ${inst.id_instituicao}`;
-          select.appendChild(option);
-        });
-      } catch (error) {
-        alert('Erro ao carregar instituições: ' + error.message);
-      }
+    // Cria um objeto URLSearchParams
+    const params = new URLSearchParams(queryString);
+    const id = params.get('id');
+    
+    if(!id){
+      alert('Erro, voltando ');
+      window.location.href = './instituicoesDoUsuario.html'
     }
-
-    carregarInstituicoes();
 
     // Envio do formulário
     document.getElementById('form-campanha').addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const campanha = {
-        nome: document.getElementById('nome').value,
+        titulo: document.getElementById('nome').value,
         descricao: document.getElementById('descricao').value,
-        data_inicio: document.getElementById('data_inicio').value,
-        data_fim: document.getElementById('data_fim').value,
-        instituicaoId: parseInt(document.getElementById('instituicao_id').value)
+        dataInicio: document.getElementById('data_inicio').value,
+        dataFim: document.getElementById('data_fim').value,
+        instituicaoId: parseInt(id)
       };
 
+      console.log(campanha)
+
       try {
-        const response = await fetch('http://localhost:3000/api/doar/campanha', {
+        const response = await fetch('http://localhost:3000/api/doar/instituicao/create/campain', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -101,4 +95,5 @@
     });
   </script>
 </body>
+
 </html>
