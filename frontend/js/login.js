@@ -34,7 +34,7 @@ form.addEventListener('submit', async (e) => {
             localStorage.setItem('idUser', responseData.usuario.id_usuario);
 
             // Redirecionar para a página inicial após login bem-sucedido
-            window.location.href = './instituicoes/instituicoes.html';
+            window.location.href = './instituicoes.html';
         } else {
             const data = await response.json();
             alert(data.message || 'Falha no login');

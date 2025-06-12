@@ -30,7 +30,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const instituicaoId = urlParams.get("id")
+            const instituicaoId = urlParams.get("idInst")
 
             if (!instituicaoId || instituicaoId ===  undefined) {
                 alert("ID da instituição não informado.");
@@ -58,7 +58,7 @@
                     div.innerHTML = `
                     <h3>${campanha.titulo}</h3>
                     <p>${campanha.descricao}</p>
-                    <button onclick="editarCampanha(${campanha.id})" class="button">Editar</button>
+                    <button onclick="editarCampanha(${instituicaoId}, ${campanha.id})" class="button">Editar</button>
                 `;
                     listaContainer.appendChild(div);
                 });
@@ -70,9 +70,8 @@
         });
 
 
-        function editarCampanha(id) {
-            console.log(id)
-            window.location.href=`./atualizarCampanha.html?id=${id}`
+        function editarCampanha(idInstituicao,idCampanha) {
+            window.location.href=`./atualizarCampanha.html?idInst=${idInstituicao}&idCampanha=${idCampanha}`
         }
 
     </script>

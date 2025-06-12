@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsDateString, IsInt, IsBoolean, IsDate } from 'class-validator';
+import { IsOptional, IsString, IsDateString, IsInt, IsBoolean, IsDate, IsBooleanString } from 'class-validator';
 
 export class UpdateCampanhaDto {
   @IsInt()
@@ -20,6 +20,6 @@ export class UpdateCampanhaDto {
   @IsDateString()
   dataFim?: Date;
 
-  @IsBoolean()
+  @IsBoolean({message: 'Escolha se a campanha esta ativa ou não'})
   ativo: boolean;
 }

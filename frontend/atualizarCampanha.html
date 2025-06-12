@@ -43,20 +43,21 @@
     </form>
   </div>
 
-  <button onclick="window.history.back()" class="back">« Voltar</button>
+  <button onclick="voltar()" class="back">« Voltar</button>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
+    const idinstituicao = urlParams.get("idInst");
+    const idCampanha = urlParams.get("idCampanha")
 
-    if (!id) {
+    if (!idCampanha) {
       alert("ID da campanha não fornecido.");
-      window.location.href = "campanhas.html";
+      window.location.href = `campanhas.html?${idinstituicao}`;
     }
 
     async function carregarCampanha() {
       try {
-        const response = await fetch(`http://localhost:3000/api/doar/instituicao/getOne/campaign/${id}`);
+        const response = await fetch(`http://localhost:3000/api/doar/instituicao/getOne/campaign/${idCampanha}`);
         const data = await response.json();
 
         document.getElementById("titulo").value = data.titulo || "";
@@ -68,7 +69,7 @@
       } catch (error) {
         alert("Erro ao carregar a campanha.");
         console.error(error);
-        window.location.href = "campanhas.html";
+        window.location.href = `campanhas.html?idInst=${idinstituicao}`;
       }
     }
 
@@ -78,12 +79,12 @@
       e.preventDefault();
 
       const campanhaAtualizada = {
-        id: parseInt(id),
+        id: parseInt(idCampanha),
         titulo: document.getElementById("titulo").value,
         descricao: document.getElementById("descricao").value,
         dataInicio: document.getElementById("data_inicio").value,
         dataFim: document.getElementById("data_fim").value,
-        ativa: document.getElementById("ativa").value === "true"
+        ativo: document.getElementById("ativa").value === "true"
       };
 
       console.log(campanhaAtualizada)
@@ -101,7 +102,7 @@
 
         if (response.ok) {
           alert("Campanha atualizada com sucesso!");
-          window.location.href = "campanhas.html";
+          window.location.href = `campanhas.html?idInst=${idinstituicao}`;
         } else {
           const error = await response.json();
           alert("Erro ao atualizar: " + (error.message || "Verifique os dados."));
@@ -110,6 +111,11 @@
         alert("Erro na requisição: " + error.message);
       }
     });
+
+
+    function voltar() {
+      window.location.href = `campanhas.html?id=${idinstituicao}`;
+    }
   </script>
 </body>
 </html>

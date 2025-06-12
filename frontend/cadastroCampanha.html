@@ -52,7 +52,7 @@
 
     // Cria um objeto URLSearchParams
     const params = new URLSearchParams(queryString);
-    const id = params.get('id');
+    const id = params.get('idInst');
     
     if(!id){
       alert('Erro, voltando ');
@@ -74,7 +74,7 @@
       console.log(campanha)
 
       try {
-        const response = await fetch('http://localhost:3000/api/doar/instituicao/create/campain', {
+        const response = await fetch('http://localhost:3000/api/doar/instituicao/create/campaign', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -84,7 +84,7 @@
 
         if (response.ok) {
           alert('Campanha cadastrada com sucesso!');
-          window.location.href = 'campanhas.html';
+          window.location.href = `campanhas.html?idInst=${id}`;
         } else {
           const err = await response.json();
           alert('Erro ao cadastrar campanha: ' + (err.message || 'Verifique os dados.'));
