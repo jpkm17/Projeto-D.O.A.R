@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { Campanha } from './entities/campanha.entity';
 import { CreateCampanhaDto } from './dto/create-campanha.dto';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { UpdateCampanhaDto } from './dto/update-campanha.dto';
 
 @Injectable()
 export class InstituicaoService {
@@ -140,6 +141,32 @@ export class InstituicaoService {
     });
 
     return campanhas;
+  }
+
+  async findOneCampaign(id: number): Promise<Campanha> {
+    const campanha = await this.campanhaRepository.findOneBy({ id })
+
+    if (!campanha) throw new NotFoundException('Campanha não encontrada')
+
+    return campanha
+  }
+
+
+  async updateCampaign(updateCampaingDto: UpdateCampanhaDto): Promise<Campanha> {
+
+    console.log(updateCampaingDto)
+
+    const { id, ...campanhaData } = updateCampaingDto
+
+    const campanha = await this.campanhaRepository.findOneBy({ id })
+
+    if (!campanha) throw new NotFoundException('Instituição não encontrada')
+
+    Object.assign(campanha, updateCampaingDto)
+
+    await this.campanhaRepository.save(campanha)
+
+    return campanha
   }
 
 

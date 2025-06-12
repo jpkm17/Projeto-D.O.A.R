@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsDateString, IsInt } from 'class-validator';
+import { IsOptional, IsString, IsDateString, IsInt, IsBoolean, IsDate } from 'class-validator';
 
 export class UpdateCampanhaDto {
   @IsInt()
@@ -20,7 +20,6 @@ export class UpdateCampanhaDto {
   @IsDateString()
   dataFim?: Date;
 
-  @IsOptional()
-  @IsString()
-  imagemUrl?: string;
+  @IsBoolean()
+  ativo: boolean;
 }

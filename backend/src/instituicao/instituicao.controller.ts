@@ -5,6 +5,7 @@ import { UpdateInstituicaoDto } from './dto/update-instituicao.dto';
 import { Instituicao } from './entities/instituicao.entity';
 import { CreateCampanhaDto } from './dto/create-campanha.dto';
 import { Campanha } from './entities/campanha.entity';
+import { UpdateCampanhaDto } from './dto/update-campanha.dto';
 
 @Controller('instituicao')
 export class InstituicaoController {
@@ -40,12 +41,22 @@ export class InstituicaoController {
     return this.instituicaoService.remove(+id);
   }
 
-  @Post('create/campain')
+  @Post('create/campaign')
   createCampaign(@Body() createCampanhaDto: CreateCampanhaDto): Promise<Campanha> {
     return this.instituicaoService.createCampaing(createCampanhaDto);
   }
 
-  @Get(':id/campaings')
+  @Get('getOne/campaign/:id')
+  findOneCampaign(@Param('id') id: string): Promise<Campanha> {
+    return this.instituicaoService.findOneCampaign(+id);
+  }
+
+  @Put('campaign/update')
+  updateCampaing(@Body() updateCampanhaDto: UpdateCampanhaDto): Promise<Campanha> {
+    return this.instituicaoService.updateCampaign(updateCampanhaDto);
+  }
+
+  @Get(':id/campaigns')
   findCampaingsByBusiness(@Param('id') id: string): Promise<Campanha[]> {
     return this.instituicaoService.findAllCampaignsByInstituicao(+id);
   }

@@ -3,7 +3,7 @@ async function validarToken() {
     const token = localStorage.getItem("authToken")
 
     if (!idUser && !token) {
-        window.location.href = '../login.html'
+        window.location.href = './login.html'
         return
     }
 

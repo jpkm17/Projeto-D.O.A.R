@@ -13,10 +13,6 @@ export class CreateCampanhaDto {
   @IsDateString()
   dataFim: Date;
 
-  @IsOptional()
-  @IsString()
-  imagemUrl?: string;
-
   @IsNumber()
   instituicaoId: number;
 }
