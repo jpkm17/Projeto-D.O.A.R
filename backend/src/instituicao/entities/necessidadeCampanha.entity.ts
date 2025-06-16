@@ -1,5 +1,5 @@
 // necessidadeCampanha.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { Campanha } from "./campanha.entity";
 import { Item } from "../../doacao/entities/item.entity";
 
@@ -18,6 +18,7 @@ export class NecessidadeCampanha {
   observacao: string;
   
   @ManyToOne(() => Campanha, campanha => campanha.necessidadesCampanha)
+  @JoinColumn()
   campanha: Campanha;
   
   @ManyToOne(() => Item, item => item.necessidadesCampanhas)
