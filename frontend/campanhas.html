@@ -60,6 +60,7 @@
                     <p>${campanha.descricao}</p>
                     <button onclick="editarCampanha(${instituicaoId}, ${campanha.id})" class="button">Editar</button>
                     <button onclick="adicionarNecessidadeCampanha(${instituicaoId}, ${campanha.id})" class="button">adicionar Items para campanha</button>
+                    <button onclick="verNecessidades(${instituicaoId}, ${campanha.id})" class="button">Doar</button>
                 `;
                     listaContainer.appendChild(div);
                 });
@@ -77,6 +78,10 @@
 
         function adicionarNecessidadeCampanha(idInstituicao,idCampanha) {
             window.location.href=`./adicionarItemCampanha.html?idInst=${idInstituicao}&idCampanha=${idCampanha}`
+        }
+
+        function verNecessidades(idInstituicao,idCampanha) {
+            window.location.href=`./itensCampanha.html?idInst=${idInstituicao}&idCampanha=${idCampanha}`
         }
 
     </script>

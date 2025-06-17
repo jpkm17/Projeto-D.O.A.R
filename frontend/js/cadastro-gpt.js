@@ -74,7 +74,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 data_nascimento: document.getElementById("data_nascimento").value,
                 telefone: document.getElementById("telefone").value.replace(/\D/g, ""), // Remove não-dígitos
                 email: email.value,
-                senha: String(senha.value)
+                senha: String(senha.value),
+                cpf: document.getElementById("cpf").value
             };
             
             

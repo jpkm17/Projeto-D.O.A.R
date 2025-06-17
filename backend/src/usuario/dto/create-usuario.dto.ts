@@ -22,11 +22,11 @@ export class CreateUsuarioDto {
   // @MaxLength(100, { message: 'A senha deve ter no máximo 100 caracteres' })
   // confimar_senha: string;
 
-  // @IsNotEmpty()
-  // @IsString({ message: 'O CPF deve ser uma string' })
-  // @Length(11, 14, { message: 'O CPF deve ter entre 11 e 14 caracteres' })
-  // @Matches(/^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/, { message: 'Formato de CPF inválido' })
-  // cpf: string;
+  @IsNotEmpty()
+  @IsString({ message: 'O CPF deve ser uma string' })
+  @Length(11, 14, { message: 'O CPF deve ter entre 11 e 14 caracteres' })
+  @Matches(/^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/, { message: 'Formato de CPF inválido, só utilize numeros' })
+  cpf: string;
 
   @IsOptional()
   @IsString({ message: 'O telefone deve ser uma string' })

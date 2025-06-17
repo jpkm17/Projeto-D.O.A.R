@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Doação - Doe Alimentos</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        p {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .resumo-doacao {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+
+        .resumo-doacao h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .resumo-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .resumo-total {
+            border-top: 2px solid #3498db;
+            padding-top: 10px;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="email"], select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .input-error {
+            border-color: #e74c3c !important;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .metodo-detalhes {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .metodo-detalhes.ativo {
+            display: block;
+        }
+
+        .qr-code {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .qr-placeholder {
+            width: 150px;
+            height: 150px;
+            background-color: #ddd;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .codigo-pix {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+
+        button[type="submit"], button[type="button"] {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        button[type="submit"]:hover, button[type="button"]:hover {
+            background-color: #2980b9;
+        }
+
+        button[type="submit"]:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        button.cancelar {
+            background-color: #e74c3c;
+            margin-top: 15px;
+        }
+
+        button.cancelar:hover {
+            background-color: #c0392b;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.ativo {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px auto;
+            }
+            
+            .resumo-item {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Finalizar Doação</h1>
+        <p>Complete os dados abaixo para finalizar sua doação para a instituição.</p>
+
+        <!-- Resumo da Doação -->
+        <div class="resumo-doacao">
+            <h3>Resumo da Doação</h3>
+            <div id="itens-doacao">
+                <!-- Itens serão carregados aqui -->
+            </div>
+            <div class="resumo-total">
+                <div class="resumo-item">
+                    <span>Total da Doação:</span>
+                    <span id="total-doacao">R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de Pagamento -->
+        <form id="pagamentoForm">
+            <div class="input-group">
+                <label for="nome">Nome Completo *</label>
+                <input type="text" id="nome" name="nome" required>
+                <div class="error-message" id="erro-nome"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="email">E-mail *</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message" id="erro-email"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="cpf">CPF *</label>
+                <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00">
+                <div class="error-message" id="erro-cpf"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="telefone">Telefone</label>
+                <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999">
+            </div>
+
+            <div class="input-group">
+                <label for="metodo">Método de Pagamento *</label>
+                <select id="metodo" name="metodo" required>
+                    <option value="">Selecione o método</option>
+                    <option value="pix">PIX</option>
+                    <option value="cartao">Cartão de Crédito</option>
+                    <option value="boleto">Boleto Bancário</option>
+                </select>
+            </div>
+
+            <!-- Detalhes específicos do método de pagamento -->
+            <div id="detalhes-pix" class="metodo-detalhes">
+                <h4>Pagamento via PIX</h4>
+                <div class="qr-code">
+                    <div class="qr-placeholder">QR Code PIX</div>
+                    <p>Escaneie o QR Code acima ou copie o código PIX:</p>
+                    <div class="codigo-pix" id="codigo-pix-gerado">
+                        <!-- Código PIX será gerado aqui -->
+                    </div>
+                    <button type="button" onclick="copiarCodigoPix()">Copiar Código PIX</button>
+                </div>
+            </div>
+
+            <div id="detalhes-cartao" class="metodo-detalhes">
+                <h4>Dados do Cartão</h4>
+                <div class="input-group">
+                    <label for="numero-cartao">Número do Cartão</label>
+                    <input type="text" id="numero-cartao" placeholder="0000 0000 0000 0000">
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="validade">Validade</label>
+                        <input type="text" id="validade" placeholder="MM/AA">
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="000">
+                    </div>
+                </div>
+            </div>
+
+            <div id="detalhes-boleto" class="metodo-detalhes">
+                <h4>Boleto Bancário</h4>
+                <p>Após confirmar, você receberá o boleto por e-mail. O prazo de vencimento é de 3 dias úteis.</p>
+            </div>
+
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processando pagamento...</p>
+            </div>
+
+            <button type="submit" id="btn-confirmar">Confirmar Doação</button>
+            <button type="button" onclick="cancelarPagamento()" class="cancelar">Cancelar</button>
+        </form>
+    </div>
+
+    <script>
+        // Configuração da API
+        const API_BASE_URL = 'http://localhost:3000/api/doar'; // Ajuste conforme sua configuração
+
+        // Dados simulados de doação (fallback)
+        const itensDoacao = [
+            { nome: "Cesta Básica", quantidade: 2, valor: 50.00 },
+            { nome: "Leite em Pó", quantidade: 3, valor: 15.00 },
+            { nome: "Fraldas Infantis", quantidade: 1, valor: 35.00 }
+        ];
+
+        // Buscar dados do usuário no backend
+        async function buscarDadosUsuario() {
+            const idUser = localStorage.getItem('idUser');
+            
+            if (!idUser) {
+                console.warn('ID do usuário não encontrado no localStorage');
+                return null;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/usuario/getOne/${idUser}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Adicione headers de autenticação se necessário
+                        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro na requisição: ${response.status}`);
+                }
+
+                const userData = await response.json();
+                return userData;
+            } catch (error) {
+                console.error('Erro ao buscar dados do usuário:', error);
+                alert('Erro ao carregar dados do usuário. Verifique sua conexão.');
+                return null;
+            }
+        }
+
+        // Preencher formulário com dados do usuário
+        async function preencherDadosUsuario() {
+            const userData = await buscarDadosUsuario();
+
+            if (userData) {
+                // Preencher campos do formulário
+                if (userData.nome) {
+                    document.getElementById('nome').value = userData.nome;
+                }
+                
+                if (userData.email) {
+                    document.getElementById('email').value = userData.email;
+                }
+                
+                if (userData.cpf) {
+                    document.getElementById('cpf').value = formatarCPF(userData.cpf);
+                }
+                
+                if (userData.telefone) {
+                    document.getElementById('telefone').value = formatarTelefone(userData.telefone);
+                }
+
+                // Adicionar indicador visual de que os dados foram carregados
+                const camposPreenchidos = document.querySelectorAll('#nome, #email, #cpf, #telefone');
+                camposPreenchidos.forEach(campo => {
+                    if (campo.value) {
+                        campo.style.backgroundColor = '#f0f8ff';
+                        campo.title = 'Dados carregados automaticamente';
+                    }
+                });
+
+                console.log('Dados do usuário carregados com sucesso:', userData);
+            }
+        }
+
+        // Carregar dados da doação
+        function carregarResumoDoacao() {
+            const container = document.getElementById('itens-doacao');
+            let total = 0;
+
+            // Tentar recuperar do localStorage primeiro
+            const valorStorage = localStorage.getItem('totalDoacao');
+            if (valorStorage) {
+                total = parseFloat(valorStorage);
+                container.innerHTML = `
+                    <div class="resumo-item">
+                        <span>Doação personalizada</span>
+                        <span>R$ ${total.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                `;
+            } else {
+                // Usar dados simulados
+                itensDoacao.forEach(item => {
+                    const valorTotal = item.quantidade * item.valor;
+                    total += valorTotal;
+                    
+                    container.innerHTML += `
+                        <div class="resumo-item">
+                            <span>${item.nome} (${item.quantidade}x)</span>
+                            <span>R$ ${valorTotal.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('total-doacao').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        // Gerar código PIX simulado
+        function gerarCodigoPix() {
+            const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let codigo = '';
+            for (let i = 0; i < 32; i++) {
+                codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+            }
+            return codigo;
+        }
+
+        // Copiar código PIX
+        function copiarCodigoPix() {
+            const codigo = document.getElementById('codigo-pix-gerado').textContent;
+            navigator.clipboard.writeText(codigo).then(() => {
+                alert('Código PIX copiado para a área de transferência!');
+            });
+        }
+
+        // Formatação de campos
+        function formatarCPF(cpf) {
+            return cpf.replace(/\D/g, '')
+                     .replace(/(\d{3})(\d)/, '$1.$2')
+                     .replace(/(\d{3})(\d)/, '$1.$2')
+                     .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+                     .replace(/(-\d{2})\d+?$/, '$1');
+        }
+
+        function formatarTelefone(telefone) {
+            return telefone.replace(/\D/g, '')
+                          .replace(/(\d{2})(\d)/, '($1) $2')
+                          .replace(/(\d{5})(\d)/, '$1-$2')
+                          .replace(/(-\d{4})\d+?$/, '$1');
+        }
+
+        function formatarCartao(numero) {
+            return numero.replace(/\D/g, '')
+                        .replace(/(\d{4})(\d)/, '$1 $2')
+                        .replace(/(\d{4})(\d)/, '$1 $2')
+                        .replace(/(\d{4})(\d)/, '$1 $2')
+                        .replace(/(\d{4})\d+?$/, '$1');
+        }
+
+        // Validações
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length !== 11) return false;
+            
+            // Validação simplificada para fins educacionais
+            let soma = 0;
+            for (let i = 0; i < 9; i++) {
+                soma += parseInt(cpf.charAt(i)) * (10 - i);
+            }
+            let resto = 11 - (soma % 11);
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.charAt(9))) return false;
+
+            soma = 0;
+            for (let i = 0; i < 10; i++) {
+                soma += parseInt(cpf.charAt(i)) * (11 - i);
+            }
+            resto = 11 - (soma % 11);
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.charAt(10))) return false;
+
+            return true;
+        }
+
+        function validarEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+
+        function mostrarErro(campo, mensagem) {
+            document.getElementById(campo).classList.add('input-error');
+            document.getElementById(`erro-${campo.replace('-', '')}`).textContent = mensagem;
+        }
+
+        function limparErro(campo) {
+            document.getElementById(campo).classList.remove('input-error');
+            document.getElementById(`erro-${campo.replace('-', '')}`).textContent = '';
+        }
+
+        // Event listeners
+        document.getElementById('cpf').addEventListener('input', function(e) {
+            e.target.value = formatarCPF(e.target.value);
+        });
+
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            e.target.value = formatarTelefone(e.target.value);
+        });
+
+        document.getElementById('numero-cartao').addEventListener('input', function(e) {
+            e.target.value = formatarCartao(e.target.value);
+        });
+
+        document.getElementById('validade').addEventListener('input', function(e) {
+            let valor = e.target.value.replace(/\D/g, '');
+            if (valor.length >= 2) {
+                valor = valor.substring(0, 2) + '/' + valor.substring(2, 4);
+            }
+            e.target.value = valor;
+        });
+
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+        });
+
+        // Mostrar detalhes do método de pagamento
+        document.getElementById('metodo').addEventListener('change', function() {
+            // Esconder todos os detalhes
+            document.querySelectorAll('.metodo-detalhes').forEach(el => {
+                el.classList.remove('ativo');
+            });
+
+            // Mostrar detalhes do método selecionado
+            if (this.value) {
+                const detalhes = document.getElementById(`detalhes-${this.value}`);
+                if (detalhes) {
+                    detalhes.classList.add('ativo');
+                    
+                    // Gerar código PIX se necessário
+                    if (this.value === 'pix') {
+                        document.getElementById('codigo-pix-gerado').textContent = gerarCodigoPix();
+                    }
+                }
+            }
+        });
+
+        // Submissão do formulário
+        document.getElementById('pagamentoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Limpar erros anteriores
+            document.querySelectorAll('.input-error').forEach(el => {
+                el.classList.remove('input-error');
+            });
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+            });
+
+            // Validações
+            let valido = true;
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const cpf = document.getElementById('cpf').value.trim();
+            const metodo = document.getElementById('metodo').value;
+
+            if (!nome || nome.length < 3) {
+                mostrarErro('nome', 'Nome completo é obrigatório (mínimo 3 caracteres)');
+                valido = false;
+            }
+
+            if (!validarEmail(email)) {
+                mostrarErro('email', 'E-mail inválido');
+                valido = false;
+            }
+
+            if (!validarCPF(cpf)) {
+                mostrarErro('cpf', 'CPF inválido');
+                valido = false;
+            }
+
+            if (!metodo) {
+                alert('Selecione um método de pagamento');
+                valido = false;
+            }
+
+            if (!valido) return;
+
+            // Simular processamento
+            document.getElementById('loading').classList.add('ativo');
+            document.getElementById('btn-confirmar').disabled = true;
+
+            try {
+                // Preparar dados da doação para envio
+                const dadosDoacao = {
+                    id_doador: parseInt(localStorage.getItem('idUser')),
+                    valor_total: parseFloat(document.getElementById('total-doacao').textContent.replace('R$ ', '').replace(',', '.')),
+                    metodo_pagamento: metodo,
+                    status: 'pendente',
+                    // Adicione outros campos conforme sua entidade Doacao
+                };
+
+                // Enviar dados para o backend (descomente quando quiser integrar)
+                /*
+                const response = await fetch(`${API_BASE_URL}/doacao`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(dadosDoacao)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao processar doação: ${response.status}`);
+                }
+
+                const resultado = await response.json();
+                */
+
+                // Simulação para fins educacionais
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Gerar número de transação
+                const numeroTransacao = 'DOE' + Date.now().toString().slice(-8);
+                
+                // Salvar dados da transação
+                const dadosTransacao = {
+                    numero: numeroTransacao,
+                    id_usuario: localStorage.getItem('idUser'),
+                    nome: nome,
+                    email: email,
+                    cpf: cpf.replace(/\D/g, ''),
+                    valor: document.getElementById('total-doacao').textContent,
+                    metodo: metodo,
+                    data: new Date().toISOString(),
+                    status: 'confirmado'
+                };
+
+                // Salvar localmente para fins educacionais
+                sessionStorage.setItem('transacao', JSON.stringify(dadosTransacao));
+
+                alert(`Doação confirmada!\n\nNúmero da transação: ${numeroTransacao}\n\nObrigado por sua generosidade!`);
+                
+                // Redirecionar para página de confirmação
+                window.location.href = '#confirmacao';
+
+            } catch (error) {
+                console.error('Erro ao processar doação:', error);
+                alert('Erro ao processar doação. Tente novamente.');
+            } finally {
+                document.getElementById('loading').classList.remove('ativo');
+                document.getElementById('btn-confirmar').disabled = false;
+            }
+        });
+
+        function cancelarPagamento() {
+            if (confirm('Tem certeza que deseja cancelar a doação?')) {
+                window.location.href = '#inicio'; // Em um projeto real, voltaria para página inicial
+            }
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verificar se existe ID do usuário
+            const idUser = localStorage.getItem('idUser');
+            if (!idUser) {
+                alert('Usuário não identificado. Redirecionando para login...');
+                // window.location.href = '/login'; // Descomente para redirecionar
+                return;
+            }
+
+            // Carregar dados da doação
+            carregarResumoDoacao();
+            
+            // Buscar e preencher dados do usuário
+            await preencherDadosUsuario();
+        });
+    </script>
+</body>
+</html>
