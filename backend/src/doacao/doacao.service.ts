@@ -10,6 +10,9 @@ import { ItemDoacao } from './entities/itemDoacao.entity';
 import { FormaPagamento } from './entities/formaPagamento.entity';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { Instituicao } from 'src/instituicao/entities/instituicao.entity';
+import { Campanha } from 'src/instituicao/entities/campanha.entity';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Injectable()
 export class DoacaoService {
@@ -24,80 +27,144 @@ export class DoacaoService {
     private itemDoacaoRepository: Repository<ItemDoacao>,
     @InjectRepository(FormaPagamento)
     private formaPagamentoRepository: Repository<FormaPagamento>,
+    @InjectRepository(Instituicao)
+    private instituicaoRepository: Repository<Instituicao>,
+    @InjectRepository(Campanha)
+    private campanhaRepository: Repository<Campanha>,
+    @InjectRepository(Usuario)
+    private usuarioRepository: Repository<Usuario>,
   ) { }
 
   /* DOACAO */
   async createDoacao(createDoacaoDto: CreateDoacaoDto) {
-    const doacao = await this.doacaoRepository.create(createDoacaoDto)
+    // const doacao = await this.doacaoRepository.create(createDoacaoDto)
+
+    const { data, formaPagamento, idCampanha, idUser, valorTotal, status, comprovanteDoacaoUrl } = createDoacaoDto
+
+    const user = await this.usuarioRepository.findOneBy({ id_usuario: idUser });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado, tente novamente!');
+    }
+
+    const campanha = await this.campanhaRepository.findOne({
+      where: { id: idCampanha },
+      relations: ['instituicao'],
+    });
+    if (!campanha) {
+      throw new NotFoundException('Campanha não encontrada, tente novamente!');
+    }
+
+    const instituicao = campanha.instituicao;
+    if (!instituicao) {
+      throw new NotFoundException('Instituição não encontrada, tente novamente!');
+    }
+
+    let doacao = new Doacao()
+    doacao.data = data
+    doacao.campanha = campanha
+    doacao.doador = user
+    doacao.instituicao = instituicao
+    doacao.formaPagamento = formaPagamento
+    doacao.status = status
+    doacao.valorTotal = valorTotal
+    doacao.comprovanteDoacaoUrl = comprovanteDoacaoUrl
+
+
+    try {
+      await this.doacaoRepository.save(doacao)
+
+    } catch (error) {
+      throw new Error('Algo deu errado tente novamente mais tarde')
+    }
+
+
     return doacao;
   }
 
-  async findAllDoacoes() {
-    return await this.doacaoRepository.find()
+  async findAllDoacoesByUser(id:number) {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id_usuario: id },
+    });
+
+    if (!usuario) {
+      throw new NotFoundException('Usuário não encontrado.');
+    }
+
+    const doacoes = await this.doacaoRepository.find({
+      where: { doador: { id_usuario: id } },
+      relations: ['instituicao', 'campanha', 'itensDoacao'],
+      order: { data: 'DESC' },
+    });
+
+    if (doacoes.length === 0) {
+      throw new NotFoundException('Nenhuma doação encontrada para este usuário.');
+    }
+
+    return doacoes;
   }
 
   async findOneDoacao(id: number) {
-    const doacao = await this.doacaoRepository.findOneBy({ id })
+  const doacao = await this.doacaoRepository.findOneBy({ id })
 
-    if (!doacao) throw new NotFoundException('Doacao não encontrada')
+  if (!doacao) throw new NotFoundException('Doacao não encontrada')
 
-    return doacao
-  }
+  return doacao
+}
 
   async updateDoacao(id: number, updateDoacaoDto: UpdateDoacaoDto) {
-    const doacao = await this.itemRepository.findOneBy({ id })
+  const doacao = await this.itemRepository.findOneBy({ id })
 
-    if (!doacao) throw new NotFoundException('Doacao não encontrada')
+  if (!doacao) throw new NotFoundException('Doacao não encontrada')
 
-    Object.assign(doacao, updateDoacaoDto)
+  Object.assign(doacao, updateDoacaoDto)
 
-    return doacao
-  }
+  return doacao
+}
 
   async remove(id: number) {
-    const doacao = await this.itemRepository.findOneBy({ id })
+  const doacao = await this.itemRepository.findOneBy({ id })
 
-    if (!doacao) throw new NotFoundException('Doacao não encontrada')
+  if (!doacao) throw new NotFoundException('Doacao não encontrada')
 
-    return await this.itemRepository.remove(doacao)
-  }
+  return await this.itemRepository.remove(doacao)
+}
 
 
 
   /* ITEMS */
-  async createItem(createItemDto: CreateItemDto): Promise<Item> {
-    const item = await this.itemRepository.create(createItemDto)
 
-    return item;
-  }
+  async findAllItems(): Promise < Item[] > {
+  return await this.itemRepository.find()
+}
 
-  async findAllItems(): Promise<Item[]> {
-    return await this.itemRepository.find()
-  }
+  // async createItem(createItemDto: CreateItemDto): Promise<Item> {
+  //   const item = await this.itemRepository.create(createItemDto)
 
-  async findOneItem(id: number): Promise<Item> {
-    const item = await this.itemRepository.findOneBy({ id })
+  //   return item;
+  // }
+  // async findOneItem(id: number): Promise<Item> {
+  //   const item = await this.itemRepository.findOneBy({ id })
 
-    if (!item) throw new NotFoundException('Instituição não encontrada')
+  //   if (!item) throw new NotFoundException('Instituição não encontrada')
 
-    return item
-  }
+  //   return item
+  // }
 
-  async updateItem(id: number, updateItemDto: UpdateItemDto): Promise<Item> {
-    const item = await this.itemRepository.findOneBy({ id })
+  // async updateItem(id: number, updateItemDto: UpdateItemDto): Promise<Item> {
+  //   const item = await this.itemRepository.findOneBy({ id })
 
-    if (!item) throw new NotFoundException('Instituição não encontrada')
+  //   if (!item) throw new NotFoundException('Instituição não encontrada')
 
-    Object.assign(item, updateItemDto)
+  //   Object.assign(item, updateItemDto)
 
-    return item
-  }
+  //   return item
+  // }
 
-  async removeItem(id: number): Promise<Item> {
-    const item = await this.itemRepository.findOneBy({ id })
+  // async removeItem(id: number): Promise<Item> {
+  //   const item = await this.itemRepository.findOneBy({ id })
 
-    if (!item) throw new NotFoundException('Instituição não encontrada')
+  //   if (!item) throw new NotFoundException('Instituição não encontrada')
 
-    return await this.itemRepository.remove(item)
-  }
+  //   return await this.itemRepository.remove(item)
+  // }
 }

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doe para a Campanha</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .campanha-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .campanha-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .campanha-info {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .progresso-campanha {
+            background-color: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .barra-progresso {
+            width: 100%;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progresso-fill {
+            height: 100%;
+            background-color: #27ae60;
+            transition: width 0.3s ease;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Layout em colunas */
+        .conteudo-dividido {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .lista-produtos {
+            flex: 2;
+        }
+
+        .resumo-compra {
+            flex: 1;
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            position: sticky;
+            top: 30px;
+            height: fit-content;
+        }
+
+        .necessidade-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .necessidade-item.completa {
+            background-color: #d5f4e6;
+            border-color: #27ae60;
+        }
+
+        .necessidade-item.completa::after {
+            content: "✓ Completa";
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background-color: #27ae60;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .produto-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .produto-nome {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .produto-descricao {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .produto-preco {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .necessidade-info {
+            flex: 1;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .quantidade-necessaria {
+            font-size: 14px;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+
+        .quantidade-recebida {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .progress-bar-mini {
+            width: 100%;
+            height: 8px;
+            background-color: #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+
+        .progress-fill-mini {
+            height: 100%;
+            background-color: #3498db;
+            transition: width 0.3s ease;
+        }
+
+        .product-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quantidade-input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .product-actions button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .product-actions button:hover {
+            background-color: #2980b9;
+        }
+
+        .product-actions button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .resumo-compra h3 {
+            color: #34495e;
+            margin-top: 0;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .resumo-compra ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 15px 0;
+        }
+
+        .resumo-compra li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .resumo-compra .total {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+            text-align: center;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .resumo-compra button {
+            width: 100%;
+            background-color: #27ae60;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .resumo-compra button:hover {
+            background-color: #219a52;
+        }
+
+        .resumo-compra button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .observacao {
+            font-style: italic;
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            .conteudo-dividido {
+                flex-direction: column;
+            }
+            
+            .necessidade-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .produto-info, .necessidade-info {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+    <script>
+        fetch('./header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            });
+    </script>
+
+    <div class="container">
+        <div class="campanha-header">
+            <h1 id="campanha-titulo">Carregando campanha...</h1>
+            <p id="campanha-descricao">Aguarde...</p>
+        </div>
+
+        <div id="progresso-container" class="progresso-campanha" style="display: none;">
+            <h3>Progresso da Campanha</h3>
+            <div class="barra-progresso">
+                <div class="progresso-fill" id="barra-progresso"></div>
+            </div>
+            <p id="progresso-texto">0% concluído</p>
+            <p id="progresso-detalhes">0 de 0 itens completos</p>
+        </div>
+
+        <div id="error-message" class="error" style="display: none;"></div>
+
+        <div id="loading" class="loading">
+            <p>Carregando necessidades da campanha...</p>
+        </div>
+
+        <div id="conteudo-principal" style="display: none;">
+            <h2>Escolha os itens que deseja doar</h2>
+
+            <div class="conteudo-dividido">
+                <!-- Metade esquerda: Lista de necessidades -->
+                <div class="lista-produtos">
+                    <div class="product-list" id="necessidades-list">
+                        <!-- Necessidades serão inseridas aqui pelo JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Metade direita: Resumo da doação -->
+                <div class="resumo-compra">
+                    <h3>Itens Selecionados</h3>
+                    <ul id="itens-selecionados">
+                        <li style="color: #666; font-style: italic;">Nenhum item selecionado</li>
+                    </ul>
+                    <div class="total">
+                        <p>Total da Doação: R$ <span id="total">0,00</span></p>
+                    </div>
+                    <button id="btn-finalizar" onclick="finalizarDoacao()" disabled>Finalizar Doação</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let idCampanha = null;
+        let necessidades = [];
+        let itensSelecionados = [];
+        let progressoCampanha = null;
+
+        // Função para obter parâmetros da URL
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Função para inicializar a página
+        async function inicializar() {
+            idCampanha = getUrlParameter('idCampanha')
+            
+            if (!idCampanha) {
+                mostrarErro('ID da campanha não encontrado na URL');
+                return;
+            }
+
+            await carregarDadosCampanha();
+        }
+
+        // Função para carregar dados da campanha
+        async function carregarDadosCampanha() {
+            try {
+                // Carregar necessidades e progresso em paralelo
+                const [necessidadesResponse, progressoResponse] = await Promise.all([
+                    fetch(`http://localhost:3000/api/doar/instituicao/campanha/${idCampanha}/necessidades`),
+                    fetch(`http://localhost:3000/api/doar/instituicao/campanha/${idCampanha}/progresso`)
+                ]);
+
+                if (!necessidadesResponse.ok || !progressoResponse.ok) {
+                    throw new Error('Erro ao carregar dados da campanha');
+                }
+
+                const necessidadesData = await necessidadesResponse.json();
+                const progressoData = await progressoResponse.json();
+
+                if (necessidadesData.success) {
+                    necessidades = necessidadesData.data;
+                    renderizarNecessidades();
+                }
+
+                if (progressoData.success) {
+                    progressoCampanha = progressoData.data;
+                    renderizarProgresso();
+                }
+
+                // Atualizar título da campanha (assumindo que está na primeira necessidade)
+                if (necessidades.length > 0) {
+                    document.getElementById('campanha-titulo').textContent = 
+                        necessidades[0].campanha?.titulo || 'Campanha de Doação';
+                    document.getElementById('campanha-descricao').textContent = 
+                        necessidades[0].campanha?.descricao || 'Ajude-nos a atingir nossa meta!';
+                }
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('conteudo-principal').style.display = 'block';
+
+            } catch (error) {
+                console.error('Erro ao carregar campanha:', error);
+                mostrarErro('Erro ao carregar dados da campanha. Tente novamente.');
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Função para renderizar o progresso da campanha
+        function renderizarProgresso() {
+            if (!progressoCampanha) return;
+
+            const container = document.getElementById('progresso-container');
+            const barra = document.getElementById('barra-progresso');
+            const texto = document.getElementById('progresso-texto');
+            const detalhes = document.getElementById('progresso-detalhes');
+
+            barra.style.width = `${progressoCampanha.percentualCompleto}%`;
+            texto.textContent = `${progressoCampanha.percentualCompleto}% concluído`;
+            detalhes.textContent = `${progressoCampanha.itensCompletos} de ${progressoCampanha.totalItens} itens completos`;
+
+            container.style.display = 'block';
+        }
+
+        // Função para renderizar as necessidades
+        function renderizarNecessidades() {
+            const container = document.getElementById('necessidades-list');
+
+            if (necessidades.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Nenhuma necessidade cadastrada para esta campanha.</p></div>';
+                return;
+            }
+
+            let html = '';
+            necessidades.forEach(necessidade => {
+                const item = necessidade.item;
+                const percentualRecebido = necessidade.quantidadeNecessaria > 0 
+                    ? (necessidade.quantidadeRecebida / necessidade.quantidadeNecessaria) * 100 
+                    : 0;
+                
+                const isCompleta = necessidade.quantidadeRecebida >= necessidade.quantidadeNecessaria;
+                const quantidadeRestante = Math.max(0, necessidade.quantidadeNecessaria - necessidade.quantidadeRecebida);
+
+                html += `
+                    <div class="necessidade-item ${isCompleta ? 'completa' : ''}" data-necessidade-id="${necessidade.id}">
+                        <div class="produto-info">
+                            <div class="produto-nome">${item.nome}</div>
+                            ${item.descricao ? `<div class="produto-descricao">${item.descricao}</div>` : ''}
+                            <div class="produto-preco">R$ ${parseFloat(item.valorReferencia).toFixed(2)}${item.unidadeMedida ? ' / ' + item.unidadeMedida : ''}</div>
+                            ${necessidade.observacao ? `<div class="observacao">${necessidade.observacao}</div>` : ''}
+                        </div>
+                        
+                        <div class="necessidade-info">
+                            <div class="quantidade-necessaria">
+                                <strong>Necessário:</strong> ${necessidade.quantidadeNecessaria}${item.unidadeMedida ? ' ' + item.unidadeMedida : ''}
+                            </div>
+                            <div class="quantidade-recebida">
+                                Recebido: ${necessidade.quantidadeRecebida} (${Math.round(percentualRecebido)}%)
+                            </div>
+                            <div class="progress-bar-mini">
+                                <div class="progress-fill-mini" style="width: ${Math.min(100, percentualRecebido)}%"></div>
+                            </div>
+                            ${quantidadeRestante > 0 ? `<div style="color: #e74c3c; font-size: 12px; margin-top: 5px;">Faltam: ${quantidadeRestante}</div>` : ''}
+                        </div>
+                        
+                        <div class="product-actions">
+                            <input type="number" 
+                                   class="quantidade-input" 
+                                   id="qty-${necessidade.id}" 
+                                   min="1" 
+                                   max="${quantidadeRestante}"
+                                   placeholder="Qtd"
+                                   ${isCompleta ? 'disabled' : ''}>
+                            <button onclick="adicionarItem(${necessidade.id})" ${isCompleta ? 'disabled' : ''}>
+                                ${isCompleta ? 'Completo' : 'Adicionar'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Função para adicionar item à doação
+        function adicionarItem(necessidadeId) {
+            const necessidade = necessidades.find(n => n.id === necessidadeId);
+            const quantidadeInput = document.getElementById(`qty-${necessidadeId}`);
+            const quantidade = parseInt(quantidadeInput.value);
+
+            if (!quantidade || quantidade <= 0) {
+                alert('Por favor, digite uma quantidade válida.');
+                return;
+            }
+
+            const quantidadeRestante = Math.max(0, necessidade.quantidadeNecessaria - necessidade.quantidadeRecebida);
+            if (quantidade > quantidadeRestante) {
+                alert(`Quantidade máxima disponível: ${quantidadeRestante}`);
+                return;
+            }
+
+            // Verificar se o item já foi adicionado
+            const itemExistente = itensSelecionados.find(item => item.necessidadeId === necessidadeId);
+            
+            if (itemExistente) {
+                itemExistente.quantidade += quantidade;
+                itemExistente.total = itemExistente.quantidade * itemExistente.preco;
+            } else {
+                itensSelecionados.push({
+                    necessidadeId: necessidadeId,
+                    itemId: necessidade.item.id,
+                    nome: necessidade.item.nome,
+                    preco: parseFloat(necessidade.item.valorReferencia),
+                    quantidade: quantidade,
+                    total: quantidade * parseFloat(necessidade.item.valorReferencia),
+                    unidadeMedida: necessidade.item.unidadeMedida || ''
+                });
+            }
+
+            // Limpar input
+            quantidadeInput.value = '';
+            
+            // Atualizar resumo
+            atualizarResumo();
+        }
+
+        // Função para atualizar o resumo da doação
+        function atualizarResumo() {
+            const container = document.getElementById('itens-selecionados');
+            const totalElement = document.getElementById('total');
+            const btnFinalizar = document.getElementById('btn-finalizar');
+
+            if (itensSelecionados.length === 0) {
+                container.innerHTML = '<li style="color: #666; font-style: italic;">Nenhum item selecionado</li>';
+                totalElement.textContent = '0,00';
+                btnFinalizar.disabled = true;
+                return;
+            }
+
+            let html = '';
+            let totalGeral = 0;
+
+            itensSelecionados.forEach((item, index) => {
+                totalGeral += item.total;
+                html += `
+                    <li>
+                        <div>
+                            <strong>${item.nome}</strong><br>
+                            <small>${item.quantidade}${item.unidadeMedida ? ' ' + item.unidadeMedida : ''} × R$ ${item.preco.toFixed(2)}</small>
+                        </div>
+                        <div>
+                            <strong>R$ ${item.total.toFixed(2)}</strong><br>
+                            <button onclick="removerItem(${index})" style="background: #e74c3c; padding: 2px 6px; font-size: 12px;">×</button>
+                        </div>
+                    </li>
+                `;
+            });
+
+            container.innerHTML = html;
+            totalElement.textContent = totalGeral.toFixed(2);
+            btnFinalizar.disabled = false;
+        }
+
+        // Função para remover item da doação
+        function removerItem(index) {
+            itensSelecionados.splice(index, 1);
+            atualizarResumo();
+        }
+
+        // Função para finalizar a doação
+        function finalizarDoacao() {
+            if (itensSelecionados.length === 0) {
+                alert('Selecione pelo menos um item para doar.');
+                return;
+            }
+
+            const total = itensSelecionados.reduce((sum, item) => sum + item.total, 0);
+            
+            if (confirm(`Confirma a doação no valor de R$ ${total.toFixed(2)}?`)) {
+                // Aqui você pode redirecionar para uma página de pagamento
+                // ou fazer uma requisição para criar a doação
+                
+                const dadosDoacao = {
+                    idCampanha: idCampanha,
+                    itens: itensSelecionados,
+                    valorTotal: total
+                };
+
+                console.log('Dados da doação:', dadosDoacao);
+                
+                // console.log(`pagamento.html?doacao=${encodeURIComponent(JSON.stringify(dadosDoacao))}`)
+
+                localStorage.setItem('dadosDoacao',JSON.stringify(dadosDoacao))
+
+                // Exemplo de redirecionamento para página de pagamento
+                window.location.href = `./pagamento.html?idCampanha=${idCampanha}`;
+                
+                // alert('Funcionalidade de pagamento será implementada em breve!');
+            }
+        }
+
+        // Função para mostrar erro
+        function mostrarErro(mensagem) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = mensagem;
+            errorDiv.style.display = 'block';
+        }
+
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', inicializar);
+    </script>
+</body>
+</html>

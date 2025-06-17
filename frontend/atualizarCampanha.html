@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Atualizar Campanha</title>
+  <link rel="stylesheet" href="css/cadastro-gpt.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <script>
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header').innerHTML = data;
+      });
+  </script>
+
+  <div class="container">
+    <h2>Atualizar Campanha</h2>
+
+    <form id="form-campanha">
+      <label for="titulo">Título:</label>
+      <input type="text" id="titulo" name="titulo" required />
+
+      <label for="descricao">Descrição:</label>
+      <textarea id="descricao" name="descricao" rows="4" style="width: 100%;" required></textarea>
+
+      <label for="data_inicio">Data de Início:</label>
+      <input type="date" id="data_inicio" name="data_inicio" required />
+
+      <label for="data_fim">Data de Fim:</label>
+      <input type="date" id="data_fim" name="data_fim" required />
+
+      <label for="ativa">Campanha está Ativa?</label>
+      <select id="ativa" name="ativa" required>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
+      </select>
+
+      <button type="submit" class="button">Atualizar Campanha</button>
+    </form>
+  </div>
+
+  <button onclick="voltar()" class="back">« Voltar</button>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const idinstituicao = urlParams.get("idInst");
+    const idCampanha = urlParams.get("idCampanha")
+
+    if (!idCampanha) {
+      alert("ID da campanha não fornecido.");
+      window.location.href = `campanhas.html?${idinstituicao}`;
+    }
+
+    async function carregarCampanha() {
+      try {
+        const response = await fetch(`http://localhost:3000/api/doar/instituicao/getOne/campaign/${idCampanha}`);
+        const data = await response.json();
+
+        document.getElementById("titulo").value = data.titulo || "";
+        document.getElementById("descricao").value = data.descricao || "";
+        document.getElementById("data_inicio").value = data.dataInicio?.substring(0, 10) || "";
+        document.getElementById("data_fim").value = data.dataFim?.substring(0, 10) || "";
+        document.getElementById("ativa").value = data.ativa ? "true" : "false";
+
+      } catch (error) {
+        alert("Erro ao carregar a campanha.");
+        console.error(error);
+        window.location.href = `campanhas.html?idInst=${idinstituicao}`;
+      }
+    }
+
+    carregarCampanha();
+
+    document.getElementById("form-campanha").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const campanhaAtualizada = {
+        id: parseInt(idCampanha),
+        titulo: document.getElementById("titulo").value,
+        descricao: document.getElementById("descricao").value,
+        dataInicio: document.getElementById("data_inicio").value,
+        dataFim: document.getElementById("data_fim").value,
+        ativo: document.getElementById("ativa").value === "true"
+      };
+
+      console.log(campanhaAtualizada)
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/doar/instituicao/campaign/update`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(campanhaAtualizada)
+        });
+
+        
+
+        if (response.ok) {
+          alert("Campanha atualizada com sucesso!");
+          window.location.href = `campanhas.html?idInst=${idinstituicao}`;
+        } else {
+          const error = await response.json();
+          alert("Erro ao atualizar: " + (error.message || "Verifique os dados."));
+        }
+      } catch (error) {
+        alert("Erro na requisição: " + error.message);
+      }
+    });
+
+
+    function voltar() {
+      window.location.href = `campanhas.html?id=${idinstituicao}`;
+    }
+  </script>
+</body>
+</html>

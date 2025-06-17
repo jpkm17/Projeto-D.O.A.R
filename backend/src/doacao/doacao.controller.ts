@@ -8,14 +8,14 @@ import { CreateItemDto } from './dto/create-item.dto';
 export class DoacaoController {
   constructor(private readonly doacaoService: DoacaoService) { }
 
-  @Post()
+  @Post('create')
   createDoacao(@Body() createDoacaoDto: CreateDoacaoDto) {
     return this.doacaoService.createDoacao(createDoacaoDto);
   }
 
-  @Get()
-  findAllDoacao() {
-    return this.doacaoService.findAllDoacoes();
+  @Get('minhasDoacoes/:userId')
+  findAllDoacaoByUser(@Param('userId') id: number) {
+    return this.doacaoService.findAllDoacoesByUser(id);
   }
 
   @Get(':id')
@@ -37,29 +37,29 @@ export class DoacaoController {
 
   /* ITEMS */
 
-  @Post('createItem')
-  createItem(@Body() createItemDto: CreateItemDto) {
-    return this.doacaoService.createItem(createItemDto);
-  }
-
-  @Get('items')
+  
+  @Get('items/allItems')
   findAllItems() {
     return this.doacaoService.findAllItems();
   }
+  // @Post('createItem')
+  // createItem(@Body() createItemDto: CreateItemDto) {
+  //   return this.doacaoService.createItem(createItemDto);
+  // }
+  
+  // @Get('oneItem/:id')
+  // findOneItem(@Param('id') id: string) {
+  //   return this.doacaoService.findOneItem(+id);
+  // }
 
-  @Get('item/:id')
-  findOneItem(@Param('id') id: string) {
-    return this.doacaoService.findOneItem(+id);
-  }
+  // @Put('updateItem/:id')
+  // updateItem(@Param('id') id: string, @Body() updateDoacaoDto: UpdateDoacaoDto) {
+  //   return this.doacaoService.updateItem(+id, updateDoacaoDto);
+  // }
 
-  @Put('updateItem/:id')
-  updateItem(@Param('id') id: string, @Body() updateDoacaoDto: UpdateDoacaoDto) {
-    return this.doacaoService.updateItem(+id, updateDoacaoDto);
-  }
-
-  @Delete('removeItem/:id')
-  removeItem(@Param('id') id: string) {
-    return this.doacaoService.removeItem(+id);
-  }
+  // @Delete('removeItem/:id')
+  // removeItem(@Param('id') id: string) {
+  //   return this.doacaoService.removeItem(+id);
+  // }
 
 }

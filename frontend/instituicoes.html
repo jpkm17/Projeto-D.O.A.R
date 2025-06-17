@@ -8,7 +8,7 @@
 <body>
   <div id="header"></div>
 
-  <script src="../js/validarToken.js"></script>
+  <script src="./js/validarToken.js"></script>
 
   <script>
     fetch('header.html')
@@ -25,10 +25,7 @@
       <!-- As instituições serão inseridas aqui dinamicamente -->
     </div>
 
-    <button class="back" onclick="voltar()">« Voltar</button>
-    <button class="back" onclick="cadastrarInstituicao()">Cadastrar Instituição</button>
-    <button class="back" onclick="atualizarUmaInstituicao()">atualizar instit</button>
-    <button class="back" onclick="listarMInhaInsituicoes()">Minhas insti</button>
+   
   </div>
 
   <script>
@@ -42,12 +39,13 @@
 
         if (instituicoes && instituicoes.length > 0) {
           instituicoes.forEach(inst => {
+            const id = inst.id_instituicao
             const nome = inst.nome_fantasia || inst.razao_social || `Instituição ${inst.id_instituicao}`;
             const descricao = inst.descricao || 'Sem descrição disponível.';
 
             const div = document.createElement('div');
             div.classList.add('instituicao');
-            div.onclick = () => redirecionarParaDoacao(nome);
+            div.onclick = () => redirecionarParaDoacao(id);
             div.innerHTML = `
               <h3>${nome}</h3>
               <p>${descricao}</p>
@@ -64,8 +62,8 @@
       }
     }
 
-    function redirecionarParaDoacao(nomeInstituicao) {
-      window.location.href = `../campanhas/campanhas.html?instituicao=${encodeURIComponent(nomeInstituicao)}`;
+    function redirecionarParaDoacao(id) {
+      window.location.href = `./campanhas.html?idInst=${encodeURIComponent(id)}`;
     }
 
     function voltar() {

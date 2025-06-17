@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minhas Instituições</title>
   <link rel="stylesheet" href="css/cadastro-gpt.css" />
 </head>
+
 <body>
   <div id="header"></div>
 
@@ -62,6 +64,8 @@
             <p><strong>Área de Atuação:</strong> ${inst.areas_atuacao || "Não informada"}</p>
             <p><strong>Descrição:</strong> ${inst.descricao || "Sem descrição"}</p>
             <button onclick="editarInstituicao(${inst.id_instituicao})" class="button">Editar</button>
+            <button class="button" onclick="listarCampanhas(${inst.id_instituicao})">Listar Campanhas</button>
+            <button class="button" onclick="adicionarCampanha(${inst.id_instituicao})">Adicionar Campanha</button>
           `;
           lista.appendChild(div);
         });
@@ -72,7 +76,15 @@
     }
 
     function editarInstituicao(id) {
-      window.location.href = `atualizar-instituicao.html?id=${id}`;
+      window.location.href = `atualizarInstituicao.html?id=${id}`;
+    }
+
+    function listarCampanhas(id) {
+      window.location.href = `./campanhas.html?idInst=${id}`
+    }
+
+    function adicionarCampanha(id) {
+      window.location.href = `./cadastroCampanha.html?idInst=${id}`
     }
 
     carregarInstituicoesDoUsuario();
@@ -84,7 +96,7 @@
       padding: 15px;
       margin-top: 15px;
       border-radius: 8px;
-      box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
       text-align: left;
     }
 
@@ -103,4 +115,5 @@
     }
   </style>
 </body>
+
 </html>

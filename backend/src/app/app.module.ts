@@ -25,8 +25,8 @@ import { InstituicaoModule } from 'src/instituicao/instituicao.module';
       // dropSchema: true,
     } as TypeOrmModuleOptions),
     UsuarioModule,
-    // DoacaoModule,
-    InstituicaoModule
+    InstituicaoModule,
+    DoacaoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
