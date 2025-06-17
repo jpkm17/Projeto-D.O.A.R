@@ -3,6 +3,7 @@ async function validarToken() {
     const token = localStorage.getItem("authToken")
 
     if (!idUser && !token) {
+        alert("É necessario estar logado para ver esta página")
         window.location.href = '/frontend/login.html'
         return
     }

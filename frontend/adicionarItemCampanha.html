@@ -200,7 +200,7 @@
         }
     </style>
 
-    <!-- <script src="./js/validarToken.js"></script> -->
+    <script src="./js/validarToken.js"></script>
 </head>
 
 <body>
@@ -293,7 +293,7 @@
         // Função para carregar todos os itens
         async function carregarItens() {
             try {
-                const response = await fetch('http://localhost:3000/api/doar/items/allItems');
+                const response = await fetch('http://localhost:3000/api/doar/doacao/items/allItems');
 
                 if (!response.ok) {
                     throw new Error('Erro ao carregar itens');
