@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastro de Campanha</title>
   <link rel="stylesheet" href="./css/cadastro-gpt.css" />
+  <script src="./js/validarToken.js"></script>
 </head>
 
 <body>
@@ -84,7 +85,7 @@
 
         if (response.ok) {
           alert('Campanha cadastrada com sucesso!');
-          window.location.href = `campanhas.html?idInst=${id}`;
+          window.location.href = `campanhas.html?idInst=${id}&isOwner=true`;
         } else {
           const err = await response.json();
           alert('Erro ao cadastrar campanha: ' + (err.message || 'Verifique os dados.'));

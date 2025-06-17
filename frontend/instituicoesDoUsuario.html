@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minhas Instituições</title>
   <link rel="stylesheet" href="css/cadastro-gpt.css" />
+  <script src="./js/validarToken.js"></script>
 </head>
 
 <body>
@@ -80,7 +81,7 @@
     }
 
     function listarCampanhas(id) {
-      window.location.href = `./campanhas.html?idInst=${id}`
+      window.location.href = `./campanhas.html?idInst=${id}&isOwner=true`
     }
 
     function adicionarCampanha(id) {

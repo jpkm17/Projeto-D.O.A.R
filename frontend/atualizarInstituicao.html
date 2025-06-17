@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Atualizar Instituição</title>
   <link rel="stylesheet" href="css/cadastro-gpt.css" />
+  <script src="./js/validarToken.js"></script>
 </head>
 <body>
   <div id="header"></div>
@@ -49,7 +50,7 @@
     </form>
   </div>
 
-  <button onclick="window.history.back()" class="back">« Voltar</button>
+  <button onclick="voltar()" class="back">« Voltar</button>
 
   <script>
     // Captura o ID da URL (ex: atualizar-instituicao.html?id=2)
@@ -119,6 +120,10 @@
         alert("Erro na requisição: " + error.message);
       }
     });
+
+    function voltar() {
+      window.history.back()
+    }
   </script>
 </body>
 </html>
