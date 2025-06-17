@@ -8,6 +8,9 @@ import { Campanha } from './entities/campanha.entity';
 import { CreateCampanhaDto } from './dto/create-campanha.dto';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { UpdateCampanhaDto } from './dto/update-campanha.dto';
+import { CreateNecessidadeCampanhaDto } from './dto/create-necessidade-campanha.dto';
+import { NecessidadeCampanha } from './entities/necessidadeCampanha.entity';
+import { Item } from 'src/doacao/entities/item.entity';
 
 @Injectable()
 export class InstituicaoService {
@@ -18,6 +21,10 @@ export class InstituicaoService {
     private campanhaRepository: Repository<Campanha>,
     @InjectRepository(Usuario)
     private usuarioRepository: Repository<Usuario>,
+    @InjectRepository(NecessidadeCampanha)
+    private necessidadeCampanhaRepository: Repository<NecessidadeCampanha>,
+    @InjectRepository(Item)
+    private itemRepository: Repository<Item>,
   ) { }
 
   async create(createInstituicaoDto: CreateInstituicaoDto): Promise<Instituicao> {
@@ -63,8 +70,6 @@ export class InstituicaoService {
   }
 
   async findAllbyUser(id: number): Promise<Instituicao[]> {
-
-
     // Buscando o usuário com a opção de "where"
     const user = await this.usuarioRepository.findOne({
       where: { id_usuario: id },
@@ -89,8 +94,6 @@ export class InstituicaoService {
     return instituicoes;
   }
 
-
-
   async update(id: number, updateInstituicaoDto: UpdateInstituicaoDto): Promise<Instituicao> {
     const instituicao = await this.instituicaoRepository.findOneBy({ id_instituicao: id })
 
@@ -110,6 +113,8 @@ export class InstituicaoService {
 
     return await this.instituicaoRepository.remove(instituicao)
   }
+
+
 
   async createCampaing(createCampanhaDto: CreateCampanhaDto): Promise<Campanha> {
     // Extrai o instituicaoId e remove do DTO
@@ -132,7 +137,6 @@ export class InstituicaoService {
 
     return campanha;
   }
-
 
   async findAllCampaignsByInstituicao(id: number): Promise<Campanha[]> {
     const campanhas = await this.campanhaRepository.find({
@@ -169,13 +173,132 @@ export class InstituicaoService {
     return campanha
   }
 
-
   async removeCampaing(id: number): Promise<Campanha> {
     const campanha = await this.campanhaRepository.findOneBy({ id: id })
 
     if (!campanha) throw new NotFoundException('campanha não encontrada')
 
     return await this.campanhaRepository.remove(campanha)
+  }
+
+
+  /* NECESSIDADE CAMPANHA */
+
+  async criar(criarNecessidadeCampanhaDto: CreateNecessidadeCampanhaDto): Promise<NecessidadeCampanha> {
+    const { idCampanha, idItem, quantidadeNecessaria, quantidadeRecebida, observacao } = criarNecessidadeCampanhaDto;
+
+    console.log('comecei o criar')
+
+    // Verificar se a campanha existe e está ativa
+    const campanha = await this.campanhaRepository.findOne({
+      where: { id: idCampanha, ativa: true }
+    });
+
+
+    if (!campanha) {
+      throw new NotFoundException('Campanha não encontrada ou inativa');
+    }
+
+    // Verificar se o item existe e está ativo
+    const item = await this.itemRepository.findOne({
+      where: { id: idItem, ativo: true }
+    });
+
+    if (!item) {
+      throw new NotFoundException('Item não encontrado ou inativo');
+    }
+
+    // Verificar se já existe uma necessidade para este item nesta campanha
+    const necessidadeExistente = await this.necessidadeCampanhaRepository.findOne({
+      where: {
+        campanha: { id: idCampanha },
+        item: { id: idItem }
+      }
+    });
+
+    if (necessidadeExistente) {
+      throw new BadRequestException('Este item já foi adicionado a esta campanha');
+    }
+
+    // Criar a necessidade da campanha
+    const necessidadeCampanha = this.necessidadeCampanhaRepository.create({
+      quantidadeNecessaria,
+      quantidadeRecebida: quantidadeRecebida || 0,
+      observacao,
+      campanha,
+      item
+    });
+
+    console.log(necessidadeCampanha)
+
+    return await this.necessidadeCampanhaRepository.save(necessidadeCampanha);
+  }
+
+  async buscarPorCampanha(campanhaId: number): Promise<NecessidadeCampanha[]> {
+    return await this.necessidadeCampanhaRepository.find({
+      where: { campanha: { id: campanhaId } },
+      relations: ['item', 'item.categoria'],
+      order: { id: 'ASC' }
+    });
+  }
+
+  async buscarPorId(id: number): Promise<NecessidadeCampanha> {
+    const necessidade = await this.necessidadeCampanhaRepository.findOne({
+      where: { id },
+      relations: ['campanha', 'item', 'item.categoria']
+    });
+
+    if (!necessidade) {
+      throw new NotFoundException('Necessidade não encontrada');
+    }
+
+    return necessidade;
+  }
+
+  async atualizar(id: number, dadosAtualizacao: Partial<CreateNecessidadeCampanhaDto>): Promise<NecessidadeCampanha> {
+    const necessidade = await this.buscarPorId(id);
+
+    // Atualizar apenas os campos permitidos
+    if (dadosAtualizacao.quantidadeNecessaria !== undefined) {
+      necessidade.quantidadeNecessaria = dadosAtualizacao.quantidadeNecessaria;
+    }
+
+    if (dadosAtualizacao.quantidadeRecebida !== undefined) {
+      necessidade.quantidadeRecebida = dadosAtualizacao.quantidadeRecebida;
+    }
+
+    if (dadosAtualizacao.observacao !== undefined) {
+      necessidade.observacao = dadosAtualizacao.observacao;
+    }
+
+    return await this.necessidadeCampanhaRepository.save(necessidade);
+  }
+
+  async remover(id: number): Promise<void> {
+    const necessidade = await this.buscarPorId(id);
+    await this.necessidadeCampanhaRepository.remove(necessidade);
+  }
+
+  async calcularProgresso(campanhaId: number): Promise<any> {
+    const necessidades = await this.buscarPorCampanha(campanhaId);
+
+    let totalNecessario = 0;
+    let totalRecebido = 0;
+
+    for (const necessidade of necessidades) {
+      totalNecessario += necessidade.quantidadeNecessaria;
+      totalRecebido += necessidade.quantidadeRecebida;
+    }
+
+    const percentualCompleto = totalNecessario > 0 ? (totalRecebido / totalNecessario) * 100 : 0;
+
+    return {
+      totalItens: necessidades.length,
+      totalNecessario,
+      totalRecebido,
+      percentualCompleto: Math.round(percentualCompleto * 100) / 100,
+      itensCompletos: necessidades.filter(n => n.quantidadeRecebida >= n.quantidadeNecessaria).length
+    };
   }
 
 }

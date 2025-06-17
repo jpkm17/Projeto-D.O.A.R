@@ -59,7 +59,7 @@
                     <h3>${campanha.titulo}</h3>
                     <p>${campanha.descricao}</p>
                     <button onclick="editarCampanha(${instituicaoId}, ${campanha.id})" class="button">Editar</button>
-                    <button onclick="editarCampanha(${instituicaoId}, ${campanha.id})" class="button">adicionar Items</button>
+                    <button onclick="adicionarNecessidadeCampanha(${instituicaoId}, ${campanha.id})" class="button">adicionar Items para campanha</button>
                 `;
                     listaContainer.appendChild(div);
                 });
@@ -73,6 +73,10 @@
 
         function editarCampanha(idInstituicao,idCampanha) {
             window.location.href=`./atualizarCampanha.html?idInst=${idInstituicao}&idCampanha=${idCampanha}`
+        }
+
+        function adicionarNecessidadeCampanha(idInstituicao,idCampanha) {
+            window.location.href=`./adicionarItemCampanha.html?idInst=${idInstituicao}&idCampanha=${idCampanha}`
         }
 
     </script>

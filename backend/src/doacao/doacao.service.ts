@@ -65,39 +65,39 @@ export class DoacaoService {
 
 
   /* ITEMS */
-  async createItem(createItemDto: CreateItemDto): Promise<Item> {
-    const item = await this.itemRepository.create(createItemDto)
-
-    return item;
-  }
 
   async findAllItems(): Promise<Item[]> {
     return await this.itemRepository.find()
   }
 
-  async findOneItem(id: number): Promise<Item> {
-    const item = await this.itemRepository.findOneBy({ id })
+  // async createItem(createItemDto: CreateItemDto): Promise<Item> {
+  //   const item = await this.itemRepository.create(createItemDto)
 
-    if (!item) throw new NotFoundException('Instituição não encontrada')
+  //   return item;
+  // }
+  // async findOneItem(id: number): Promise<Item> {
+  //   const item = await this.itemRepository.findOneBy({ id })
 
-    return item
-  }
+  //   if (!item) throw new NotFoundException('Instituição não encontrada')
 
-  async updateItem(id: number, updateItemDto: UpdateItemDto): Promise<Item> {
-    const item = await this.itemRepository.findOneBy({ id })
+  //   return item
+  // }
 
-    if (!item) throw new NotFoundException('Instituição não encontrada')
+  // async updateItem(id: number, updateItemDto: UpdateItemDto): Promise<Item> {
+  //   const item = await this.itemRepository.findOneBy({ id })
 
-    Object.assign(item, updateItemDto)
+  //   if (!item) throw new NotFoundException('Instituição não encontrada')
 
-    return item
-  }
+  //   Object.assign(item, updateItemDto)
 
-  async removeItem(id: number): Promise<Item> {
-    const item = await this.itemRepository.findOneBy({ id })
+  //   return item
+  // }
 
-    if (!item) throw new NotFoundException('Instituição não encontrada')
+  // async removeItem(id: number): Promise<Item> {
+  //   const item = await this.itemRepository.findOneBy({ id })
 
-    return await this.itemRepository.remove(item)
-  }
+  //   if (!item) throw new NotFoundException('Instituição não encontrada')
+
+  //   return await this.itemRepository.remove(item)
+  // }
 }
