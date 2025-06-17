@@ -13,9 +13,9 @@ export class DoacaoController {
     return this.doacaoService.createDoacao(createDoacaoDto);
   }
 
-  @Get()
-  findAllDoacao() {
-    return this.doacaoService.findAllDoacoes();
+  @Get('minhasDoacoes/:userId')
+  findAllDoacaoByUser(@Param('userId') id: number) {
+    return this.doacaoService.findAllDoacoesByUser(id);
   }
 
   @Get(':id')

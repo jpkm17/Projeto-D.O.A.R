@@ -69,10 +69,10 @@ export class DoacaoService {
     doacao.valorTotal = valorTotal
     doacao.comprovanteDoacaoUrl = comprovanteDoacaoUrl
 
-    
+
     try {
       await this.doacaoRepository.save(doacao)
-      
+
     } catch (error) {
       throw new Error('Algo deu errado tente novamente mais tarde')
     }
@@ -81,43 +81,61 @@ export class DoacaoService {
     return doacao;
   }
 
-  async findAllDoacoes() {
-    return await this.doacaoRepository.find()
+  async findAllDoacoesByUser(id:number) {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id_usuario: id },
+    });
+
+    if (!usuario) {
+      throw new NotFoundException('Usuário não encontrado.');
+    }
+
+    const doacoes = await this.doacaoRepository.find({
+      where: { doador: { id_usuario: id } },
+      relations: ['instituicao', 'campanha', 'itensDoacao'],
+      order: { data: 'DESC' },
+    });
+
+    if (doacoes.length === 0) {
+      throw new NotFoundException('Nenhuma doação encontrada para este usuário.');
+    }
+
+    return doacoes;
   }
 
   async findOneDoacao(id: number) {
-    const doacao = await this.doacaoRepository.findOneBy({ id })
+  const doacao = await this.doacaoRepository.findOneBy({ id })
 
-    if (!doacao) throw new NotFoundException('Doacao não encontrada')
+  if (!doacao) throw new NotFoundException('Doacao não encontrada')
 
-    return doacao
-  }
+  return doacao
+}
 
   async updateDoacao(id: number, updateDoacaoDto: UpdateDoacaoDto) {
-    const doacao = await this.itemRepository.findOneBy({ id })
+  const doacao = await this.itemRepository.findOneBy({ id })
 
-    if (!doacao) throw new NotFoundException('Doacao não encontrada')
+  if (!doacao) throw new NotFoundException('Doacao não encontrada')
 
-    Object.assign(doacao, updateDoacaoDto)
+  Object.assign(doacao, updateDoacaoDto)
 
-    return doacao
-  }
+  return doacao
+}
 
   async remove(id: number) {
-    const doacao = await this.itemRepository.findOneBy({ id })
+  const doacao = await this.itemRepository.findOneBy({ id })
 
-    if (!doacao) throw new NotFoundException('Doacao não encontrada')
+  if (!doacao) throw new NotFoundException('Doacao não encontrada')
 
-    return await this.itemRepository.remove(doacao)
-  }
+  return await this.itemRepository.remove(doacao)
+}
 
 
 
   /* ITEMS */
 
-  async findAllItems(): Promise<Item[]> {
-    return await this.itemRepository.find()
-  }
+  async findAllItems(): Promise < Item[] > {
+  return await this.itemRepository.find()
+}
 
   // async createItem(createItemDto: CreateItemDto): Promise<Item> {
   //   const item = await this.itemRepository.create(createItemDto)
