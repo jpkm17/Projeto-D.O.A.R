@@ -63,9 +63,6 @@
         document.getElementById("razao_social").value = data.razao_social || "";
         document.getElementById("cnpj").value = data.cnpj || "";
         document.getElementById("descricao").value = data.descricao || "";
-        document.getElementById("areas_atuacao").value = data.areas_atuacao || "";
-        document.getElementById("capacidade_recepcao").value = data.capacidade_recepcao || "";
-        document.getElementById("horario_funcionamento").value = data.horario_funcionamento || "";
       } catch (error) {
         alert("Erro ao buscar dados da instituição.");
         console.error(error);
@@ -85,9 +82,6 @@
         razao_social: document.getElementById("razao_social").value,
         cnpj: document.getElementById("cnpj").value,
         descricao: document.getElementById("descricao").value,
-        areas_atuacao: document.getElementById("areas_atuacao").value,
-        capacidade_recepcao: document.getElementById("capacidade_recepcao").value,
-        horario_funcionamento: document.getElementById("horario_funcionamento").value
       };
 
       try {
