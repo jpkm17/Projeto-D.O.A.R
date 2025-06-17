@@ -49,7 +49,7 @@
     </form>
   </div>
 
-  <button onclick="window.history.back()" class="back">« Voltar</button>
+  <button onclick="voltar()" class="back">« Voltar</button>
 
   <script>
     // Captura o ID da URL (ex: atualizar-instituicao.html?id=2)
@@ -119,6 +119,10 @@
         alert("Erro na requisição: " + error.message);
       }
     });
+
+    function voltar() {
+      window.history.back()
+    }
   </script>
 </body>
 </html>

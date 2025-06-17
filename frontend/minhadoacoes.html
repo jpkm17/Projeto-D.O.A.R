@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Doações</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 60px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin: 40px 0;
+        }
+
+        .error {
+            text-align: center;
+            font-size: 18px;
+            color: #e74c3c;
+            margin: 40px 0;
+            padding: 20px;
+            background-color: #fdf2f2;
+            border: 1px solid #e74c3c;
+            border-radius: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin: 40px 0;
+        }
+
+        /* Layout das doações em grid */
+        .doacoes-lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .doacao {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: box-shadow 0.3s;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .doacao:hover {
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+            background-color: #eef6fc;
+        }
+
+        .doacao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .doacao-id {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status.pendente {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status.confirmada {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #badbcc;
+        }
+
+        .status.entregue {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #99d6ff;
+        }
+
+        .status.cancelada {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f1aeb5;
+        }
+
+        .doacao-info {
+            margin-bottom: 10px;
+        }
+
+        .doacao-info strong {
+            color: #34495e;
+        }
+
+        .doacao-valor {
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            margin: 10px 0;
+        }
+
+        .doacao-data {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .forma-pagamento {
+            background-color: #e8f4fd;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #2980b9;
+        }
+
+        .observacao {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            margin: 10px 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        .comprovantes {
+            margin-top: 15px;
+        }
+
+        .comprovante-link {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 8px 12px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .comprovante-link:hover {
+            background-color: #2980b9;
+        }
+
+        button.back {
+            display: block;
+            margin: 40px auto 0;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: #3498db;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button.back:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+
+            .doacoes-lista {
+                grid-template-columns: 1fr;
+            }
+
+            .doacao {
+                padding: 15px;
+            }
+
+            .doacao-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Minhas Doações</h1>
+        
+        <div id="loading" class="loading">
+            Carregando suas doações...
+        </div>
+        
+        <div id="error" class="error" style="display: none;">
+            Erro ao carregar as doações. Tente novamente.
+        </div>
+        
+        <div id="empty" class="empty-state" style="display: none;">
+            Você ainda não fez nenhuma doação.
+        </div>
+        
+        <div id="doacoes-container" class="doacoes-lista" style="display: none;">
+            <!-- Doações serão inseridas aqui pelo JavaScript -->
+        </div>
+        
+        <button class="back" onclick="history.back()">Voltar</button>
+    </div>
+
+    <script>
+        // Pega o ID do usuário da URL (assumindo que está na URL)
+        function getUsuarioId() {
+           
+            const idUser = localStorage.getItem("idUser") 
+
+            if(!idUser) {
+                alert("Algo deu errado, é necessário fazer o login novamente")
+                window.location.href= '/frontend/instituicoes.html'
+            }
+
+            return idUser
+        }
+
+        // Função para formatar data
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            return data.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Função para formatar valor monetário
+        function formatarValor(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        // Função para criar o HTML de uma doação
+        function criarCardDoacao(doacao) {
+            const statusClass = doacao.status ? doacao.status.toLowerCase() : 'pendente';
+            const statusText = doacao.status || 'Pendente';
+            
+            console.log(doacao)
+
+            return `
+                <div class="doacao">
+                    <div class="doacao-header">
+                        <div class="doacao-id">Doação #${doacao.id}</div>
+                        <div class="status ${statusClass}">${statusText}</div>
+                    </div>
+                    
+                    <div class="doacao-info">
+                        <strong>Instituição:</strong> ${doacao.instituicao?.nome || 'Não informado'}
+                    </div>
+                    
+                    ${doacao.campanha ? `
+                        <div class="doacao-info">
+                            <strong>Campanha:</strong> ${doacao.campanha.titulo}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="doacao-valor">
+                        ${formatarValor(doacao.valorTotal)}
+                    </div>
+                    
+                    <div class="forma-pagamento">
+                        ${doacao.formaPagamento || 'Não informado'}
+                    </div>
+                    
+                    <div class="doacao-data">
+                        ${formatarData(doacao.data)}
+                    </div>
+                    
+                    ${doacao.observacao ? `
+                        <div class="observacao">
+                            <strong>Observação:</strong> ${doacao.observacao}
+                        </div>
+                    ` : ''}
+                    
+                    ${(doacao.comprovantePagamento || doacao.comprovanteDoacaoUrl) ? `
+                        <div class="comprovantes">
+                            ${doacao.comprovantePagamento ? `
+                                <a href="${doacao.comprovantePagamento}" class="comprovante-link" target="_blank">
+                                    Ver Comprovante de Pagamento
+                                </a>
+                            ` : ''}
+                            ${doacao.comprovanteDoacaoUrl ? `
+                                <a href="${doacao.comprovanteDoacaoUrl}" class="comprovante-link" target="_blank">
+                                    Ver Comprovante de Doação
+                                </a>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Função principal para carregar as doações
+        async function carregarDoacoes() {
+            const loadingDiv = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+            const emptyDiv = document.getElementById('empty');
+            const containerDiv = document.getElementById('doacoes-container');
+            
+            try {
+                const userId = getUsuarioId();
+                const response = await fetch(`http://localhost:3000/api/doar/doacao/minhasDoacoes/${userId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const doacoes = await response.json();
+                
+                loadingDiv.style.display = 'none';
+                
+                if (!doacoes || doacoes.length === 0) {
+                    emptyDiv.style.display = 'block';
+                    return;
+                }
+                
+                // Renderizar as doações
+                containerDiv.innerHTML = doacoes.map(doacao => criarCardDoacao(doacao)).join('');
+                containerDiv.style.display = 'grid';
+                
+            } catch (error) {
+                console.error('Erro ao carregar doações:', error);
+                loadingDiv.style.display = 'none';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Carregar as doações quando a página carrega
+        document.addEventListener('DOMContentLoaded', carregarDoacoes);
+    </script>
+</body>
+</html>
