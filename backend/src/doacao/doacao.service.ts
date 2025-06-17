@@ -10,6 +10,9 @@ import { ItemDoacao } from './entities/itemDoacao.entity';
 import { FormaPagamento } from './entities/formaPagamento.entity';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { Instituicao } from 'src/instituicao/entities/instituicao.entity';
+import { Campanha } from 'src/instituicao/entities/campanha.entity';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Injectable()
 export class DoacaoService {
@@ -24,11 +27,57 @@ export class DoacaoService {
     private itemDoacaoRepository: Repository<ItemDoacao>,
     @InjectRepository(FormaPagamento)
     private formaPagamentoRepository: Repository<FormaPagamento>,
+    @InjectRepository(Instituicao)
+    private instituicaoRepository: Repository<Instituicao>,
+    @InjectRepository(Campanha)
+    private campanhaRepository: Repository<Campanha>,
+    @InjectRepository(Usuario)
+    private usuarioRepository: Repository<Usuario>,
   ) { }
 
   /* DOACAO */
   async createDoacao(createDoacaoDto: CreateDoacaoDto) {
-    const doacao = await this.doacaoRepository.create(createDoacaoDto)
+    // const doacao = await this.doacaoRepository.create(createDoacaoDto)
+
+    const { data, formaPagamento, idCampanha, idUser, valorTotal, status, comprovanteDoacaoUrl } = createDoacaoDto
+
+    const user = await this.usuarioRepository.findOneBy({ id_usuario: idUser });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado, tente novamente!');
+    }
+
+    const campanha = await this.campanhaRepository.findOne({
+      where: { id: idCampanha },
+      relations: ['instituicao'],
+    });
+    if (!campanha) {
+      throw new NotFoundException('Campanha não encontrada, tente novamente!');
+    }
+
+    const instituicao = campanha.instituicao;
+    if (!instituicao) {
+      throw new NotFoundException('Instituição não encontrada, tente novamente!');
+    }
+
+    let doacao = new Doacao()
+    doacao.data = data
+    doacao.campanha = campanha
+    doacao.doador = user
+    doacao.instituicao = instituicao
+    doacao.formaPagamento = formaPagamento
+    doacao.status = status
+    doacao.valorTotal = valorTotal
+    doacao.comprovanteDoacaoUrl = comprovanteDoacaoUrl
+
+    
+    try {
+      await this.doacaoRepository.save(doacao)
+      
+    } catch (error) {
+      throw new Error('Algo deu errado tente novamente mais tarde')
+    }
+
+
     return doacao;
   }
 

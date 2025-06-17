@@ -3,7 +3,7 @@ async function validarToken() {
     const token = localStorage.getItem("authToken")
 
     if (!idUser && !token) {
-        window.location.href = './frontend/login.html'
+        window.location.href = '/frontend/login.html'
         return
     }
 
@@ -27,7 +27,7 @@ async function validarToken() {
     } catch (error) {
         console.error('Erro ao validar token:', error);
         alert(error.message+ ': Erro ao validar token,'   + ' redirecionando para tela de login');
-        window.location.href = './login.html'
+        window.location.href = '/frontend/login.html'
     }
 }
 

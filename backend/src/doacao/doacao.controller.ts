@@ -4,11 +4,11 @@ import { CreateDoacaoDto } from './dto/create-doacao.dto';
 import { UpdateDoacaoDto } from './dto/update-doacao.dto';
 import { CreateItemDto } from './dto/create-item.dto';
 
-@Controller()
+@Controller('doacao')
 export class DoacaoController {
   constructor(private readonly doacaoService: DoacaoService) { }
 
-  @Post()
+  @Post('create')
   createDoacao(@Body() createDoacaoDto: CreateDoacaoDto) {
     return this.doacaoService.createDoacao(createDoacaoDto);
   }

@@ -1,4 +1,5 @@
-import { IsString, IsOptional, IsNumber, IsInt, IsEnum, IsDateString, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsString, IsOptional, IsNumber, IsInt, IsEnum, IsDateString, IsNotEmpty, Length, IsArray, IsDate } from 'class-validator';
 
 export enum StatusDoacao {
   PENDENTE = 'PENDENTE',
@@ -7,31 +8,36 @@ export enum StatusDoacao {
 }
 
 export class CreateDoacaoDto {
-  // @IsDateString()
-  // data: Date;
+  @IsDateString()
+  data: Date;
 
-  // @IsOptional()
-  // @IsString()
-  // observacao?: string;
+  @IsEnum(StatusDoacao)
+  status: StatusDoacao;
 
+  @Type(() => Number)
   @IsNotEmpty()
   @IsNumber()
   valorTotal: number;
 
-  // @IsEnum(StatusDoacao)
-  // status: StatusDoacao;
+  @IsOptional()
+  @IsString()
+  comprovanteDoacaoUrl?: string;
 
-  // @IsOptional()
-  // @IsString()
-  // comprovanteDoacaoUrl?: string;
+  @IsNotEmpty()
+  @IsInt()
+  @Type(() => Number)
+  idCampanha: number;
 
-  // @IsInt()
-  // idInstituicao: number;
+  @IsNotEmpty()
+  @IsInt()
+  @Type(() => Number)
+  idUser: number;
 
-  // @IsOptional()
-  // @IsInt()
-  // idCampanha?: number;
+  @IsNotEmpty()
+  @Length(3, 20, {message: 'formaPagamento invalida'})
+  formaPagamento: string;
 
-  // @IsInt()
-  // idFormaPagamento: number;
+  @IsNotEmpty()
+  @IsArray()
+  itens: []
 }

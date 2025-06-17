@@ -1,17 +1,19 @@
-// // Dados simulados de doação
-// const itensDoacao = [
-//     { nome: "Cesta Básica", quantidade: 2, valor: 50.00 },
-//     { nome: "Leite em Pó", quantidade: 3, valor: 15.00 },
-//     { nome: "Fraldas Infantis", quantidade: 1, valor: 35.00 }
-// ];
 
-// Configuração da API
-const API_BASE_URL = 'http://localhost:3000/api/doar'; // Ajuste conforme sua configuração
-
-// Função para obter parâmetros da URL
 function getUrlParameter(name) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(name);
+}
+
+// Configuração da API
+const API_BASE_URL = 'http://localhost:3000/api/doar'; // Ajuste conforme sua configuração
+const userId = localStorage.getItem("idUser")
+
+
+// Função para obter parâmetros da URL
+const idCampanha = getUrlParameter("idCampanha")
+
+if (!idCampanha) {
+    window.history.back()
 }
 
 // Buscar dados do usuário no backend
@@ -77,7 +79,7 @@ async function preencherDadosUsuario() {
             }
         });
 
-        console.log('Dados do usuário carregados com sucesso:', userData);
+
     }
 }
 
@@ -111,8 +113,6 @@ async function carregarResumoDoacao() {
                 // Exibir total
                 document.getElementById('total-doacao').textContent =
                     `R$ ${dadosDoacao.valorTotal.toFixed(2).replace('.', ',')}`;
-
-                console.log('Dados da doação carregados:', dadosDoacao);
                 return;
             }
         } catch (error) {
@@ -301,7 +301,7 @@ document.getElementById('metodo').addEventListener('change', function () {
     }
 });
 
-// Submissão do formulário
+// Submissão do formulário (realizar do pagamento)
 document.getElementById('pagamentoForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -350,23 +350,84 @@ document.getElementById('pagamentoForm').addEventListener('submit', function (e)
         // Gerar número de transação
         const numeroTransacao = 'DOE' + Date.now().toString().slice(-8);
 
+        // Tentar recuperar dados da doação do localStorage
+        const dadosDoacaoStorage = localStorage.getItem('dadosDoacao');
+
+        if (dadosDoacaoStorage) {
+            try {
+                dadosDoacao = JSON.parse(dadosDoacaoStorage);
+            }
+
+            catch {
+
+            }
+        }
         // Salvar dados da transação
+        // const dadosTransacao = {
+        //     numero: numeroTransacao,
+        //     nome: nome,
+        //     email: email,
+        //     valor: document.getElementById('total-doacao').textContent,
+        //     metodo: metodo,
+        //     data: new Date().toLocaleString('pt-BR')
+        // };
+
+        const valorString = document.getElementById('total-doacao').textContent;
+
+        // Limpeza e conversão do valor
+        const valorNumerico = parseFloat(
+            valorString.replace(/\s/g, '')          // Remove espaços
+                .replace('R$', '')           // Remove "R$"
+                .replace('.', '')            // Remove separador de milhar (ex: 1.000)
+                .replace(',', '.')           // Converte vírgula para ponto
+        );
+
         const dadosTransacao = {
-            numero: numeroTransacao,
-            nome: nome,
-            email: email,
-            valor: document.getElementById('total-doacao').textContent,
-            metodo: metodo,
-            data: new Date().toLocaleString('pt-BR')
+            idCampanha,
+            valorTotal: valorNumerico,
+            formaPagamento: metodo,
+            status: 'CONCLUIDO',
+            idUser: userId,
+            data: new Date().toISOString(),
+            itens: []
         };
 
-        // Simular salvamento (em um projeto real, enviaria para servidor)
-        sessionStorage.setItem('transacao', JSON.stringify(dadosTransacao));
 
-        alert(`Doação confirmada!\n\nNúmero da transação: ${numeroTransacao}\n\nObrigado por sua generosidade!`);
+        fetch(`${API_BASE_URL}/doacao/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(dadosTransacao)
+        })
+            .then(response => {
+                // Verifica se há problemas com a resposta
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`Erro ${response.status}: ${text || response.statusText}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+
+                alert(`Doação confirmada!\n\nNúmero da transação: ${numeroTransacao}\n\nObrigado por sua generosidade!`);
+
+                // Opcional: redirecionar após sucesso
+                window.location.href = "/frontend/instituicoes.html";
+            })
+
+
+        // // Simular salvamento (em um projeto real, enviaria para servidor)
+        // sessionStorage.setItem('transacao', JSON.stringify(dadosTransacao));
+
+
+
+        // localStorage.removeItem(dadosDoacao)
 
         // Redirecionar para página de confirmação
-        // window.location.href = '#/confirmacao'; // Em um projeto real, seria outra página
+        // window.location.href = '/frontend/instituicoes.html'; // Em um projeto real
     }, 2000);
 });
 
