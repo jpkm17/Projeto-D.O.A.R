@@ -94,6 +94,20 @@ export class InstituicaoService {
     return instituicoes;
   }
 
+  async findUsuarioComInstituicoes(idUsuario: number): Promise<Usuario> {
+  const usuario = await this.usuarioRepository.findOne({
+    where: { id_usuario: idUsuario },
+    relations: ['instituicoesAdministradas'],  // Nome da propriedade no Entity
+  });
+
+  if (!usuario) {
+    throw new NotFoundException('Usuário não encontrado');
+  }
+
+  return usuario;
+}
+
+
   async update(id: number, updateInstituicaoDto: UpdateInstituicaoDto): Promise<Instituicao> {
     const instituicao = await this.instituicaoRepository.findOneBy({ id_instituicao: id })
 

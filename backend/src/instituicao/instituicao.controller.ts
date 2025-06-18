@@ -25,8 +25,9 @@ export class InstituicaoController {
   }
 
   @Post('allByUser')
-  findAllByUser(@Body('idUser') id: number): Promise<Instituicao[]> {
-    return this.instituicaoService.findAllbyUser(id);
+  findAllByUser(@Body('idUser') id: number) {
+    // return this.instituicaoService.findAllbyUser(id);
+    return this.instituicaoService.findUsuarioComInstituicoes(id)
   }
 
   @Get('getOne/:id')
@@ -80,7 +81,7 @@ export class InstituicaoController {
     @Body() criarNecessidadeCampanhaDto: CreateNecessidadeCampanhaDto
   ) {
     try {
-      console.log(criarNecessidadeCampanhaDto)
+      // console.log(criarNecessidadeCampanhaDto)
 
       const necessidade = await this.instituicaoService.criar(criarNecessidadeCampanhaDto);
 

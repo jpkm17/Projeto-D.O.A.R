@@ -48,7 +48,9 @@
 
         if (!response.ok) throw new Error();
 
-        const instituicoes = await response.json();
+        let instituicoes = await response.json();
+
+        instituicoes = instituicoes.instituicoesAdministradas
 
         if (!instituicoes.length) {
           lista.innerHTML = "<p>Não há instituições disponíveis.</p>";
